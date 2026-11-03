@@ -1,0 +1,1311 @@
+/* ============================================================
+   Reset & base
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --color-bg:          #f5f5f7;
+    --color-surface:     #ffffff;
+    --color-border:      #d1d5db;
+    --color-text:        #1f2937;
+    --color-text-muted:  #6b7280;
+    --color-primary:     #2563eb;
+    --color-primary-h:   #1d4ed8;
+    --color-success:     #16a34a;
+    --color-warning:     #d97706;
+    --color-danger:      #dc2626;
+    --color-draft:       #7c3aed;
+    --color-confirmed:   #16a34a;
+    --color-completed:   #0284c7;
+    --color-closed:      #374151;
+    --color-cancelled:   #dc2626;
+    --color-not-agreed:  #9ca3af;
+    --color-queue-first: #f59a3c;
+    --radius:            6px;
+    --shadow:            0 1px 3px rgba(0,0,0,.1);
+}
+
+html { font-size: 16px; }
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Printing (exports): 100vh is exactly one sheet, so the min-height above made any page that filled its
+   sheet spill onto an extra blank one; a flex body also breaks pages unreliably. Plain block flow instead. */
+@media print {
+    body { display: block; min-height: 0; }
+}
+
+a { color: var(--color-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ============================================================
+   Layout
+   ============================================================ */
+.site-header {
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+}
+
+.nav-main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    height: 56px;
+    display: flex;
+    align-items: stretch;
+    gap: 1.5rem;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    line-height: 1.1;
+    color: var(--color-text);
+    align-self: center;
+}
+
+.nav-logo-img {
+    height: 32px;
+    width: auto;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: .25rem;
+    flex: 1;
+    align-items: stretch;
+}
+
+.nav-links li { display: flex; }
+
+.nav-links a,
+.nav-link-disabled {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 .75rem;
+    border-radius: var(--radius);
+    color: var(--color-text);
+    font-size: .9rem;
+}
+
+.nav-links a:hover { text-decoration: none; }
+
+.nav-link-disabled {
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
+/*
+ * Subtle library-brand tint per menu item, cycling through the 4 library colors. Hovering a link
+ * darkens that same color a bit; the link matching the current page (.active, set server-side in
+ * layout/base.php) stays darker still, so the active item reads as more pronounced than a hover.
+ */
+.nav-links li:nth-child(4n+1) > a,
+.nav-links li:nth-child(4n+1) > .nav-link-disabled { background-color: rgba(204, 0, 102, 0.12); }
+.nav-links li:nth-child(4n+1) > a:hover { background-color: rgba(204, 0, 102, 0.32); }
+.nav-links li:nth-child(4n+1) > a.active { background-color: rgba(204, 0, 102, 0.55); }
+
+.nav-links li:nth-child(4n+2) > a,
+.nav-links li:nth-child(4n+2) > .nav-link-disabled { background-color: rgba(102, 204, 204, 0.18); }
+.nav-links li:nth-child(4n+2) > a:hover { background-color: rgba(102, 204, 204, 0.42); }
+.nav-links li:nth-child(4n+2) > a.active { background-color: rgba(102, 204, 204, 0.65); }
+
+.nav-links li:nth-child(4n+3) > a,
+.nav-links li:nth-child(4n+3) > .nav-link-disabled { background-color: rgba(255, 204, 51, 0.18); }
+.nav-links li:nth-child(4n+3) > a:hover { background-color: rgba(255, 204, 51, 0.42); }
+.nav-links li:nth-child(4n+3) > a.active { background-color: rgba(255, 204, 51, 0.65); }
+
+.nav-links li:nth-child(4n) > a,
+.nav-links li:nth-child(4n) > .nav-link-disabled { background-color: rgba(208, 208, 207, 0.35); }
+.nav-links li:nth-child(4n) > a:hover { background-color: rgba(208, 208, 207, 0.60); }
+.nav-links li:nth-child(4n) > a.active { background-color: rgba(208, 208, 207, 0.85); }
+
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    font-size: .85rem;
+    white-space: nowrap;
+    align-self: center;
+}
+
+.user-name { color: var(--color-text); font-weight: 600; }
+
+.user-menu { position: relative; }
+.user-menu summary { cursor: pointer; list-style: none; }
+.user-menu summary::-webkit-details-marker { display: none; }
+.user-menu summary::after { content: ' ▾'; }
+.user-menu .role-options { min-width: 180px; }
+
+.role-current, .role-current-solo {
+    color: var(--color-text-muted);
+    font-size: .8rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: .25rem .55rem;
+}
+
+.role-switcher { position: relative; }
+.role-switcher summary { cursor: pointer; list-style: none; }
+.role-switcher summary::-webkit-details-marker { display: none; }
+.role-switcher summary::after { content: ' ▾'; }
+
+.role-options {
+    position: absolute;
+    right: 0;
+    top: calc(100% + .35rem);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    list-style: none;
+    min-width: 160px;
+    z-index: 20;
+    overflow: hidden;
+}
+
+.role-options li form { margin: 0; }
+
+.role-option-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: .5rem .75rem;
+    background: none;
+    border: none;
+    font-size: .85rem;
+    color: var(--color-text);
+    cursor: pointer;
+}
+.role-option-btn:hover { background: var(--color-bg); }
+
+.site-main {
+    flex: 1;
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.site-footer {
+    text-align: center;
+    padding: 1rem;
+    color: var(--color-text-muted);
+    font-size: .8rem;
+    border-top: 1px solid var(--color-border);
+}
+
+/* ============================================================
+   Page header
+   ============================================================ */
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.page-header h1 { font-size: 1.6rem; }
+
+.page-actions { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+
+.breadcrumb { font-size: .85rem; color: var(--color-text-muted); display: block; margin-bottom: .25rem; }
+
+/* ============================================================
+   Cards
+   ============================================================ */
+.card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--shadow);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    gap: .5rem;
+    flex-wrap: wrap;
+}
+
+.card-header h2 { margin: 0; }
+
+.card-header-title { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.card-header-title h2 { margin: 0; }
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .45rem .9rem;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    font-size: .875rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background .15s, border-color .15s;
+    background: var(--color-bg);
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+
+.btn:hover { background: #e5e7eb; text-decoration: none; }
+
+.btn-primary { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+.btn-primary:hover { background: var(--color-primary-h); border-color: var(--color-primary-h); }
+
+.btn-success { background: var(--color-success); border-color: var(--color-success); color: #fff; }
+.btn-success:hover { background: #15803d; border-color: #15803d; }
+
+.btn-warning { background: var(--color-warning); border-color: var(--color-warning); color: #fff; }
+.btn-warning:hover { background: #b45309; }
+
+.btn-danger  { background: var(--color-danger);  border-color: var(--color-danger);  color: #fff; }
+.btn-danger:hover  { background: #b91c1c; }
+
+.btn-ghost  { background: transparent; border-color: var(--color-border); }
+.btn-ghost:hover { background: var(--color-bg); }
+
+.btn-sm { padding: .3rem .65rem; font-size: .8rem; }
+.btn-block { width: 100%; justify-content: center; }
+
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.btn-disabled,
+button.btn-disabled,
+button.btn-disabled:hover {
+    opacity: .5;
+    cursor: not-allowed;
+    background: var(--color-bg);
+    border-color: var(--color-border);
+    color: var(--color-text-muted);
+    pointer-events: none;
+}
+
+/* ============================================================
+   Alerts & flash
+   ============================================================ */
+.alert {
+    padding: .75rem 1rem;
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+    font-size: .9rem;
+    border: 1px solid transparent;
+}
+
+.alert-error   { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
+.alert-success { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+.alert-warning { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+
+/* Shown above the action calendar/list while "Zobrazit pouze moje akce" is active. */
+.only-mine-warning {
+    margin: 0 0 1rem;
+    text-align: center;
+    color: var(--color-danger);
+    font-size: 1.15rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+}
+
+/* ============================================================
+   Building code duty
+   ============================================================ */
+.today-row { background: #eff6ff; font-weight: 600; }
+
+.duty-banner {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: 1rem;
+}
+
+.duty-plain {
+    color: var(--color-text);
+    margin-bottom: 1rem;
+}
+
+.duty-plain:has(+ .duty-note) {
+    margin-bottom: .25rem;
+}
+
+.duty-today {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: .85rem;
+    color: var(--color-text-muted);
+}
+
+/* ============================================================
+   Danger zone
+   ============================================================ */
+.danger-zone {
+    margin-top: 1.5rem;
+    padding: .75rem 1rem;
+    border: 1px solid var(--color-danger);
+    border-radius: var(--radius);
+}
+
+.danger-zone summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--color-danger);
+}
+
+.danger-zone[open] { padding-bottom: 1rem; }
+.danger-zone form { margin-top: .75rem; }
+
+.inline-edit {
+    display: inline-block;
+    margin-left: .35rem;
+    vertical-align: middle;
+}
+.inline-edit summary { list-style: none; cursor: pointer; }
+.inline-edit summary::-webkit-details-marker { display: none; }
+.inline-edit[open] {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+}
+.inline-edit form {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+}
+.inline-edit form input[type="text"] {
+    width: 9rem;
+    padding: .3rem .5rem;
+}
+
+/* ============================================================
+   Status badges
+   ============================================================ */
+.status-badge {
+    display: inline-block;
+    padding: .15rem .55rem;
+    border-radius: 999px;
+    font-size: .78rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.status-draft      { background: var(--color-draft); }
+.status-confirmed  { background: var(--color-confirmed); }
+.status-completed  { background: var(--color-completed); }
+.status-closed     { background: var(--color-closed); }
+.status-cancelled  { background: var(--color-cancelled); }
+.status-not_agreed { background: var(--color-not-agreed); color: var(--color-text); }
+
+/* ============================================================
+   Tables
+   ============================================================ */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .9rem;
+}
+
+.table th, .table td {
+    padding: .65rem .75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.table th {
+    font-weight: 600;
+    color: var(--color-text-muted);
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    background: var(--color-bg);
+}
+
+.table tbody tr:hover { background: #f9fafb; }
+
+.sortable-col {
+    cursor: pointer;
+    user-select: none;
+}
+.sortable-col:hover { color: var(--color-text); }
+.sortable-col::after {
+    content: '⇅';
+    margin-left: .35em;
+    opacity: .4;
+}
+.sortable-col[data-sort-dir="asc"]::after { content: '▲'; opacity: 1; }
+.sortable-col[data-sort-dir="desc"]::after { content: '▼'; opacity: 1; }
+.table tbody tr:last-child td { border-bottom: none; }
+
+/* Marker for ended actions that still await a status change (Můj přehled).
+   Every cell in the column reserves the same left gutter, so names stay aligned. */
+.table .overdue-col {
+    position: relative;
+    padding-left: calc(.75rem + 1em + .5rem);
+}
+.overdue-dot {
+    position: absolute;
+    left: .75rem;
+    top: 50%;
+    width: 1em;
+    height: 1em;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background: var(--color-completed);
+    z-index: 1;
+}
+.overdue-dot-draft { background: var(--color-draft); }
+.overdue-dot-draft-soon { background: var(--color-confirmed); } /* draft close to its start, not yet confirmed */
+.overdue-dot-completed { background: var(--color-closed); } /* waiting to be closed */
+/* Room request first in queue — smaller than the status dot, same centre, drawn on top of it
+   (so both stay visible). Centre x = .75rem + .5em, like .overdue-dot; half its width is .35em. */
+.queue-dot {
+    position: absolute;
+    left: calc(.75rem + .15em);
+    top: 50%;
+    width: .7em;
+    height: .7em;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background: var(--color-queue-first);
+    z-index: 2; /* above the status dot */
+}
+
+/* ============================================================
+   Forms
+   ============================================================ */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: .875rem;
+    font-weight: 500;
+    margin-bottom: .35rem;
+    color: var(--color-text);
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="number"],
+.form-group input[type="datetime-local"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: .5rem .75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    font-size: .9rem;
+    font-family: inherit;
+    background: var(--color-surface);
+    color: var(--color-text);
+    transition: border-color .15s, box-shadow .15s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+}
+
+.form-group textarea { resize: vertical; }
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+@media (max-width: 600px) {
+    .form-row { grid-template-columns: 1fr; }
+}
+
+.form-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.form-section h2 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    font-size: .8rem;
+}
+
+.form-footer {
+    display: flex;
+    gap: .75rem;
+    align-items: center;
+    padding-top: 1rem;
+}
+
+/* Three columns — name | print | Excel — so the same kind of button lines up in every row
+   (a row without an Excel export just leaves its last column empty). */
+.specific-export-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 9.5rem 9.5rem;
+    align-items: center;
+    gap: .5rem;
+    padding: .6rem 0;
+    border-top: 1px solid var(--color-border);
+}
+
+.specific-export-actions {
+    display: contents;
+}
+.specific-export-actions .btn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .specific-export-row { grid-template-columns: 1fr 1fr; }
+    .specific-export-row > strong { grid-column: 1 / -1; }
+}
+
+.req { color: var(--color-danger); }
+
+.checkbox-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem 1rem;
+}
+
+.checkbox-grid-actions {
+    display: flex;
+    gap: .5rem;
+    margin-bottom: .4rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    cursor: pointer;
+    font-size: .9rem;
+}
+
+.room-state-list {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+}
+
+.room-state-row {
+    display: grid;
+    grid-template-columns: 12rem auto;
+    grid-template-areas:
+        "name buttons"
+        "meta meta"
+        "note note";
+    align-items: center;
+    gap: .3rem 1rem;
+    padding: .5rem 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.room-state-name {
+    grid-area: name;
+    font-weight: 500;
+}
+
+.place-state-group {
+    grid-area: buttons;
+}
+
+.room-state-meta {
+    grid-area: meta;
+    margin: 0;
+    text-align: left;
+}
+
+.room-state-note {
+    grid-area: note;
+}
+
+.room-state-note input {
+    width: 100%;
+    max-width: 24rem;
+}
+
+.place-state-group {
+    display: flex;
+    gap: .35rem;
+}
+
+.place-state-option {
+    position: relative;
+    cursor: pointer;
+}
+
+.place-state-option input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.place-state-option input:disabled + span {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+.place-state-option input:checked + span {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #fff;
+}
+
+.finance-rows {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    margin-bottom: .75rem;
+}
+
+.finance-row {
+    display: grid;
+    grid-template-columns: 1.1fr 1.1fr .7fr .8fr 1fr 1fr auto;
+    gap: .5rem;
+    align-items: center;
+}
+
+/* Cost rows now have the same 7 fields as income rows (type / za co / currency / amount / reference / note / delete) — same column layout. */
+.finance-row-cost { grid-template-columns: 1.1fr 1.1fr .7fr .8fr 1fr 1fr auto; }
+
+.finance-row select,
+.finance-row input {
+    width: 100%;
+    padding: .4rem .5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    font-size: .85rem;
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+@media (max-width: 900px) {
+    .finance-row, .finance-row-cost { grid-template-columns: 1fr; }
+}
+
+.changed-banner {
+    background: #fffbeb;
+    border: 1px solid #fcd34d;
+    border-radius: var(--radius);
+    padding: .5rem .75rem;
+    font-size: .85rem;
+    color: #92400e;
+    margin-bottom: .75rem;
+}
+
+/* Highlight changed fields */
+.field-changed input,
+.field-changed select,
+.field-changed textarea {
+    border-color: var(--color-warning);
+    background: #fffbeb;
+}
+
+/* Exports: organization logo in the top right corner of every heading's sheet (export/_logo, inside
+   the h1). The sheet's top margin is half of --print-margin and the heading is padded by the other
+   half, so the heading text keeps the usual margin while the logo — pulled up by that padding — sits
+   half a margin from the top edge, right-aligned with the content. It is as tall as the heading's line
+   and floats, so a long heading continues beneath it on a new line. */
+.print-sheet-title {
+    line-height: 1.2;
+    padding-top: calc(var(--print-margin, 15mm) / 2);
+}
+.print-sheet-subtitle { display: block; } /* second line of the heading, e.g. the room's name */
+.print-logo {
+    float: right;
+    height: 1.2em; /* the heading's line height */
+    width: auto;
+    margin: calc(var(--print-margin, 15mm) / -2) 0 .2em 1em;
+}
+
+/* What a rejected form/status change needs fixed (main.js → markProblem) — after .field-changed so red wins. */
+input.field-error,
+select.field-error,
+textarea.field-error {
+    border-color: var(--color-danger);
+    background: color-mix(in srgb, var(--color-danger) 12%, #fff);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-danger) 30%, transparent);
+}
+.has-error > label { color: var(--color-danger); }
+.section-error {
+    background: color-mix(in srgb, var(--color-danger) 10%, #fff);
+    outline: 2px solid var(--color-danger);
+    outline-offset: 2px;
+    border-radius: var(--radius);
+}
+
+/* ============================================================
+   Login page
+   ============================================================ */
+.login-page {
+    background: var(--color-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.login-container {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
+
+.login-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+}
+
+.login-tabs {
+    display: flex;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: .5rem;
+    border: none;
+    background: var(--color-bg);
+    cursor: pointer;
+    font-size: .875rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    transition: background .15s, color .15s;
+}
+
+.tab-btn.active { background: var(--color-primary); color: #fff; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.hint { font-size: .82rem; color: var(--color-text-muted); margin-top: .75rem; text-align: center; }
+
+/* ============================================================
+   Notification list
+   ============================================================ */
+.notification-list { list-style: none; }
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    padding: .65rem 0;
+    border-bottom: 1px solid var(--color-border);
+    font-size: .9rem;
+    flex-wrap: wrap;
+}
+
+.notification-item:last-child { border-bottom: none; }
+
+.notif-text { flex: 1; min-width: 200px; }
+.notif-time { color: var(--color-text-muted); font-size: .8rem; white-space: nowrap; }
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-danger);
+    color: #fff;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 700;
+    min-width: 1.4rem;
+    height: 1.4rem;
+    padding: 0 .35rem;
+    margin-left: .35rem;
+}
+
+/* ============================================================
+   Detail layout
+   ============================================================ */
+.action-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 1.25rem;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .action-layout { grid-template-columns: 1fr; }
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: .5rem 1rem;
+    font-size: .9rem;
+}
+
+.detail-grid dt { font-weight: 600; color: var(--color-text-muted); }
+
+.status-history { list-style: none; font-size: .875rem; }
+
+.status-history li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    align-items: center;
+    padding: .5rem 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.status-history li:last-child { border-bottom: none; }
+
+.history-time  { color: var(--color-text-muted); font-size: .8rem; }
+.history-user  { font-weight: 600; }
+.history-note  { color: var(--color-text-muted); font-style: italic; flex-basis: 100%; padding-left: .5rem; }
+
+.transition-form { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--color-border); }
+.transition-form:last-child { border-bottom: none; margin-bottom: 0; }
+
+/* ============================================================
+   Calendar – actions
+   ============================================================ */
+.calendar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+    gap: 1rem;
+}
+
+.calendar-month { font-size: 1.2rem; font-weight: 600; }
+
+/* Today's note from "Kódování budovy a poznámka ke dni", centred above the calendar's month navigation. */
+.day-note-banner {
+    text-align: center;
+    margin-bottom: .75rem;
+}
+
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.calendar-table th {
+    background: var(--color-bg);
+    text-align: center;
+    padding: .5rem;
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.cal-cell {
+    vertical-align: top;
+    padding: .4rem .35rem;
+    min-height: 80px;
+    border: 1px solid var(--color-border);
+    font-size: .8rem;
+}
+
+.cal-day {
+    display: block;
+    font-size: .85rem;
+    font-weight: 600;
+    margin-bottom: .2rem;
+}
+
+.cal-cell.other-month { background: #fafafa; color: var(--color-text-muted); }
+.cal-cell.today .cal-day {
+    background: var(--color-primary);
+    color: #fff;
+    border-radius: 50%;
+    width: 1.6rem;
+    height: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.cal-cell.weekend { background: #fafafa; }
+
+.cal-event {
+    display: block;
+    padding: .15rem .35rem;
+    margin-bottom: .15rem;
+    border-radius: 3px;
+    color: #fff;
+    font-size: .72rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+}
+
+.cal-event.status-draft      { background: var(--color-draft); }
+.cal-event.status-confirmed  { background: var(--color-confirmed); }
+.cal-event.status-completed  { background: var(--color-completed); }
+.cal-event.status-closed     { background: var(--color-closed); }
+.cal-event.status-cancelled  { background: var(--color-cancelled); }
+.cal-event.status-not_agreed { background: var(--color-not-agreed); color: var(--color-text); }
+.cal-event small { display: block; opacity: .8; }
+
+.calendar-legend {
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+    margin-top: .75rem;
+    font-size: .8rem;
+    align-items: center;
+}
+
+.legend-item { display: flex; align-items: center; gap: .35rem; }
+
+/* ============================================================
+   Calendar – places
+   ============================================================ */
+.places-calendar-wrap { overflow: hidden; }
+.places-calendar-scroll { overflow-x: auto; }
+
+.places-calendar-table {
+    border-collapse: collapse;
+    font-size: .78rem;
+    white-space: nowrap;
+}
+
+.places-calendar-table th,
+.places-calendar-table td {
+    border: 1px solid var(--color-border);
+    padding: .3rem .4rem;
+    text-align: center;
+}
+
+.place-name-col {
+    text-align: left;
+    min-width: 120px;
+    position: sticky;
+    left: 0;
+    background: var(--color-surface);
+    z-index: 2;
+}
+
+.day-col { min-width: 32px; }
+.day-col.weekend { background: #e2e8f0; }
+.day-col.today { background: #bfdbfe; font-weight: 700; }
+.day-col.occupied { background: #f0fdf4; }
+
+.place-event {
+    display: block;
+    padding: .1rem .2rem;
+    border-radius: 2px;
+    color: #fff;
+    font-size: .7rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+}
+
+.place-event.status-draft     { background: var(--color-draft); }
+.place-event.status-confirmed { background: var(--color-confirmed); }
+.place-event.status-completed { background: var(--color-completed); }
+
+.place-event-queued {
+    background: rgba(217, 119, 6, .25) !important;
+    border: 1px dashed var(--color-warning);
+    color: var(--color-text) !important;
+}
+
+.place-day-btn {
+    display: block;
+    width: 100%;
+    margin-bottom: .15rem;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--color-text-muted);
+    font-size: .7rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.place-day-btn:hover { color: var(--color-primary); }
+
+/* ============================================================
+   Calendar – room/day detail timeline
+   ============================================================ */
+.place-day-detail { margin-top: 1rem; }
+
+.place-day-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.place-day-detail-header h3 { font-size: 1rem; }
+
+.day-timeline { font-size: .82rem; }
+
+.day-timeline-ruler,
+.day-timeline-row {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.day-timeline-ruler { margin-bottom: .3rem; }
+
+.day-timeline-ruler-spacer,
+.day-timeline-row-label {
+    flex: 0 0 11rem;
+    min-width: 0;
+}
+
+.day-timeline-row-label {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.day-timeline-ruler-track,
+.day-timeline-track {
+    position: relative;
+    flex: 1 1 auto;
+}
+
+.day-timeline-ruler-track { height: 1.1rem; }
+
+.day-timeline-hour {
+    position: absolute;
+    top: 0;
+    font-size: .7rem;
+    color: var(--color-text-muted);
+    transform: translateX(-1px);
+}
+
+.day-timeline-rows {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+.day-timeline-row { padding: .1rem 0; }
+
+.day-timeline-track {
+    height: 1.6rem;
+    background-image:
+        repeating-linear-gradient(to right, var(--color-border) 0, var(--color-border) 1px, transparent 1px, transparent calc(100% / 24)),
+        repeating-linear-gradient(to right, rgba(0, 0, 0, .07) 0, rgba(0, 0, 0, .07) 1px, transparent 1px, transparent calc(100% / 96));
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+}
+
+.day-timeline-bar {
+    position: absolute;
+    border-radius: 3px;
+}
+
+.day-timeline-bar-staff {
+    top: .2rem;
+    height: .35rem;
+    opacity: .55;
+}
+
+.day-timeline-bar-public {
+    top: .55rem;
+    height: .85rem;
+}
+
+.day-timeline-bar.day-timeline-status-draft      { background: var(--color-draft); }
+.day-timeline-bar.day-timeline-status-confirmed  { background: var(--color-confirmed); }
+.day-timeline-bar.day-timeline-status-completed  { background: var(--color-completed); }
+.day-timeline-bar.day-timeline-status-closed     { background: var(--color-closed); }
+.day-timeline-bar.day-timeline-status-cancelled  { background: var(--color-cancelled); }
+.day-timeline-bar.day-timeline-status-not_agreed { background: var(--color-not-agreed); }
+
+.day-timeline-bar.queued {
+    background: transparent;
+    border: 1px dashed var(--color-warning);
+}
+.day-timeline-bar-public.queued { background: rgba(217, 119, 6, .25); }
+.day-timeline-bar-staff.queued  { background: rgba(217, 119, 6, .5); border: none; }
+
+/* Squared-off edge = the action actually continues past this side of the grid (into the
+   previous/next day), instead of really starting/ending right at the grid's boundary. */
+.day-timeline-bar-clamped-start { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.day-timeline-bar-clamped-end   { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+
+.day-timeline-queue-badge {
+    font-size: .68rem;
+    font-weight: 700;
+    color: var(--color-warning);
+    border: 1px solid var(--color-warning);
+    border-radius: 999px;
+    padding: 0 .35rem;
+    flex-shrink: 0;
+}
+
+.day-timeline-confirmed-badge {
+    font-size: .7rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--color-confirmed);
+    border-radius: 999px;
+    width: 1.1rem;
+    height: 1.1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   Admin – roles & permissions
+   ============================================================ */
+.admin-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+@media (max-width: 800px) {
+    .admin-layout { grid-template-columns: 1fr; }
+}
+
+.admin-sidebar .card + .card { margin-top: 1.5rem; }
+
+.role-list { list-style: none; margin-bottom: .5rem; }
+.role-list li { border-bottom: 1px solid var(--color-border); }
+.role-list li:last-child { border-bottom: none; }
+
+.role-link { display: block; padding: .6rem .25rem; color: var(--color-text); }
+.role-link:hover { text-decoration: none; color: var(--color-primary); }
+.role-link.active { color: var(--color-primary); font-weight: 600; }
+.role-link small { display: block; color: var(--color-text-muted); font-weight: 400; }
+
+.table form { margin: 0; }
+
+.perm-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: .2rem .55rem;
+    border-radius: var(--radius);
+    font-size: .78rem;
+    font-weight: 600;
+    color: #fff;
+}
+.perm-granted { background: var(--color-success); }
+.perm-revoked { background: var(--color-text-muted); }
+
+/* ============================================================
+   Misc
+   ============================================================ */
+.empty-state {
+    text-align: center;
+    color: var(--color-text-muted);
+    padding: 2rem;
+    font-size: .95rem;
+}
+
+.perm-denied {
+    color: var(--color-text-muted);
+    font-style: italic;
+    font-size: .9rem;
+}
+
+h2 { font-size: 1.1rem; margin-bottom: .75rem; }
+h3 { font-size: .95rem; margin: .75rem 0 .4rem; }
+
+/* ============================================================
+   Confirm-delete modal
+   ============================================================ */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-box {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+}
+
+.modal-box h3 { margin-top: 0; }
+
+.modal-box .modal-message { margin-bottom: 1rem; }
+
+.modal-box input[type="text"] {
+    width: 100%;
+    padding: .5rem .6rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: .5rem;
+}
+
+/* ============================================================
+   DOČASNÉ: upozornění na starou adresu aplikace — celé pozadí světle červené.
+   Po přesunu na novou adresu tento blok smazat.
+   ============================================================ */
+/* :root {
+    --color-bg: #ff6d6d;
+} */

@@ -1,0 +1,50 @@
+# ── PHP / Composer + external modules (vendor/BadLogin) ───────
+vendor/
+composer.lock
+
+# ── Environment & secrets ─────────────────────────────────────
+.envConfig/
+# test-only config (test DB credentials) is meant to be shared
+!tests/.envConfig/
+
+# ── Tests ─────────────────────────────────────────────────────
+# runtime output: PHPUnit cache, fake-sendmail mails, sessions, HTTP server log, junit/coverage reports
+tests/tmp/
+# PHPUnit installed by tests/run.sh (also covered by vendor/ above)
+tests/vendor/
+# PHPUnit cache/reports if written outside tests/tmp/
+.phpunit.cache/
+.phpunit.result.cache
+tests/coverage/
+# local overrides (phpunit.xml copy, docker compose UID/GID)
+tests/phpunit.local.xml
+tests/.env
+
+# ── Application storage ───────────────────────────────────────
+storage/logs/*
+storage/cache/*
+!storage/logs/.gitkeep
+!storage/cache/.gitkeep
+
+# ── Database generated files ──────────────────────────────────
+database/create.generated.sql
+database/install.php
+
+# ── OS files ──────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── VSCode ────────────────────────────────────────────────────
+.vscode/
+
+# ── Node (if ever added) ──────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# ── PHP errors & temp ─────────────────────────────────────────
+*.log
+*.cache
+
+# put to server command
+deploy.sh

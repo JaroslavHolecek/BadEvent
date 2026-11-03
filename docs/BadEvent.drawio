@@ -1,0 +1,306 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0" version="29.4.0">
+  <diagram name="Stránka-1" id="dTvKgiJVzzobDLaYXfDq">
+    <mxGraphModel dx="1638" dy="2104" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="CH46KQ4xdru8luBsawXr-1" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Událost&lt;br&gt;(skládá se z jedné či více akci)&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ akce: seznam[Akce]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;+ dotace: seznam[Dárce + částka &lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;+ jednací číslo?&lt;/span&gt;] pro jednotlivé Akce, nebo pro celou Událost?&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ dotaceCelkem(): celé číslo - součet všech dotací pro celou Událost&lt;/p&gt;" vertex="1">
+          <mxGeometry height="260" width="180" x="690" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-2" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Akce&lt;br&gt;( jedna konkrétní souvislá činnost&lt;br&gt;vždy v rámci Události )&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ od: datum + čas&lt;br&gt;+ do: datum + čas&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ zahájení: datum + čas (pro návštěvníky)&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ ukončení: datum + čas (pro návštěvníky)&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ typ: seznam[TypAkce] + popisek&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ název: text&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;+ místo: seznam[Místo]&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ status: seznam[Status + datum] - nejpozdější datum je aktuální status Akce&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ kapacita: celé číslo&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ návštěvnost: seznam[Typ náv. + Kategorie náv. + celé číslo]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ poznámka: text&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ příjem - dotace: seznam[Dárce + částka &lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;+ jednací číslo?&lt;/span&gt;]&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&amp;nbsp; &amp;nbsp;příjem - dary:&amp;nbsp;seznam[Dárce + částka &lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;+ jednací číslo?&lt;/span&gt;] &lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;- v čem je pro vás rozdíl oproti dotacím?&lt;/span&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp;příjem - vstupné: seznam[Typ vstupného + částka]&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;nbsp; &amp;nbsp;&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;příjem - pronájem: &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;jen částka částka nebo i Místo?&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;+ náklady: seznam[Typ nákladu + částka + popisek]&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;+ zodpovídá: Člověk - je to zároveň člověk, který akci spravuje v tomto systému&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;? A je vždy pouze jeden?&lt;br&gt;+ zástup: seznam[Člověk] - pouze vidí akci v seznamu &quot;mých akcí&quot;, ale nemůže ji upravovat&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ celkovýPříjem(): číslo - součet všech příjmů&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ celkovéNáklady(): číslo - součet všech nákladů&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ celkováNávštěvnost(): číslo - součet všech typů a kategorií návštěvníků&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;++ přidat cokoliv, co lze &quot;vykoukat == vypočítat&quot; z uložených dat je triviální&amp;nbsp;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="450" width="570" x="90" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-3" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;Typ Akce/Události/Obojí?&lt;br&gt;(kultura, vzdělávání, interní, ...)&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ název: text&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="80" width="180" x="900" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-4" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Místo&lt;br&gt;(místnost, exteriér, ...)&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ název: text&lt;br&gt;+ správce: seznam[Člověk]&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;Pozn.: místo &quot;Jiné&quot; má položku pro doplnění info&lt;/p&gt;" vertex="1">
+          <mxGeometry height="140" width="180" x="1110" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-5" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Status&lt;br&gt;(stav Akce např. rozjednaná, potvrzená, uzavřená, ...)&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ název: text&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;" vertex="1">
+          <mxGeometry height="100" width="180" x="1320" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-6" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Dárce&lt;br&gt;(VISK, SK, MK, ...)&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ název: text&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;" vertex="1">
+          <mxGeometry height="90" width="180" x="1320" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-8" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Typ vstupného&lt;br&gt;(web, hotově, ...)&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ název: text&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;" vertex="1">
+          <mxGeometry height="90" width="180" x="1110" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-9" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Typ nákladu&lt;br&gt;(DPP, faktura, ...)&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ název: text&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;" vertex="1">
+          <mxGeometry height="90" width="180" x="900" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-10" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Typ návštěvnice&lt;br&gt;(Platící, Neplatící, ...)&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ název: text&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;" vertex="1">
+          <mxGeometry height="90" width="180" x="900" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-11" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Kategorie návštěvnice&lt;br&gt;(-15, 15-18, 18+)&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ název: text&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;" vertex="1">
+          <mxGeometry height="90" width="180" x="1110" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-12" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Divák" vertex="1">
+          <mxGeometry height="60" width="30" x="380" y="-930" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-13" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-12" style="endArrow=open;endFill=1;endSize=12;html=1;rounded=0;" target="CH46KQ4xdru8luBsawXr-14" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="850" y="-740" as="sourcePoint" />
+            <mxPoint x="510" y="-840" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-14" parent="1" style="html=1;whiteSpace=wrap;" value="Vidí kalendář budoucích Akcí&lt;br&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;- které? (jen závazně potvrzené, nebo i rozjednané, zrušené)&lt;/span&gt;&lt;br&gt;&lt;br&gt;a minulých Akci&lt;br&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;- které? (jen proběhlé, nebo i zrušené)&lt;/span&gt;&lt;br&gt;&lt;br&gt;uvidí jen omezené množství informací &lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;- doplníme později které&amp;nbsp;&lt;/span&gt;&lt;br&gt;&lt;br&gt;Vidí kalendář místností -&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt; v takovém přehledu se projeví pouze akce, které má oprávnění vidět, nebo nějak &quot;tajně&quot; i ty, které vidět nemůže?&lt;/span&gt;" vertex="1">
+          <mxGeometry height="160" width="410" x="460" y="-980" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-15" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Administrátor" vertex="1">
+          <mxGeometry height="60" width="30" x="380" y="-590" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-16" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-15" style="endArrow=open;endFill=1;endSize=12;html=1;rounded=0;" target="CH46KQ4xdru8luBsawXr-17" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="850" y="-490" as="sourcePoint" />
+            <mxPoint x="510" y="-590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-17" parent="1" style="html=1;whiteSpace=wrap;" value="Vidí komplet vše a vše může měnit (ve smysluplných omezeních, např. nemůže nastavit datum konce před začátek a pod.)&lt;br&gt;&lt;br&gt;Jako jediný může:&lt;br&gt;- Smazat Akci/Událost ze systému (nezbydou po ní žádné stopy, kromě logů)&lt;div&gt;&lt;br&gt;&lt;/div&gt;- Měnit ostatním jejich Role&lt;br&gt;&lt;br&gt;- Vyplňovat u Akcí/Událostí &lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;ekonomické údaje (které to jsou?)&lt;/span&gt;" vertex="1">
+          <mxGeometry height="160" width="410" x="460" y="-640" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-18" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="SuperUser" vertex="1">
+          <mxGeometry height="60" width="30" x="910" y="-940" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-19" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-18" style="endArrow=open;endFill=1;endSize=12;html=1;rounded=0;" target="CH46KQ4xdru8luBsawXr-20" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="1380" y="-840" as="sourcePoint" />
+            <mxPoint x="1040" y="-940" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-20" parent="1" style="html=1;whiteSpace=wrap;" value="Má přístup do databáze a ke zdrojovému kódu - může tedy dělat úplně cokoliv, i nesmyslné věci.&lt;br&gt;&lt;br&gt;Stojí &quot;mimo&quot; systém a není to konkrétní role - je to jednoduše ten, kdo má přístupové údaje k databázi a serveru" vertex="1">
+          <mxGeometry height="120" width="410" x="990" y="-970" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-21" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Typ příjmu&lt;br&gt;(dotace, dar, vstupné, ...)&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;+ název: text&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;" vertex="1">
+          <mxGeometry height="90" width="180" x="900" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-22" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Zástup" vertex="1">
+          <mxGeometry height="60" width="30" x="380" y="-750" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-23" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-22" style="endArrow=open;endFill=1;endSize=12;html=1;rounded=0;" target="CH46KQ4xdru8luBsawXr-24" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="850" y="-650" as="sourcePoint" />
+            <mxPoint x="510" y="-750" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-24" parent="1" style="html=1;whiteSpace=wrap;" value="Vidí u Akcí, kde je jako zástup komplet vše o dané Akci,&lt;br&gt;ale nemůže nic měnit&lt;br&gt;&lt;br&gt;&lt;span style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;Pokud někdo nemá roli zástup, nemůže ho nikdo přiřadit jako zástup k akci?&lt;/span&gt;" vertex="1">
+          <mxGeometry height="120" width="410" x="460" y="-780" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-25" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Organizátor" vertex="1">
+          <mxGeometry height="60" width="30" x="380" y="-430" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-26" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-25" style="endArrow=open;endFill=1;endSize=12;html=1;rounded=0;" target="CH46KQ4xdru8luBsawXr-27" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="850" y="-330" as="sourcePoint" />
+            <mxPoint x="510" y="-430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-27" parent="1" style="html=1;whiteSpace=wrap;" value="Může vytvářet nové (své) Akce, měnit jejich nastavení a vyplněné údaje (kromě ekonomických).&lt;br&gt;Nemůže Akci/Událost smazat ze systému, ale může ji označit jako zrušenou." vertex="1">
+          <mxGeometry height="120" width="410" x="460" y="-460" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-31" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="CH46KQ4xdru8luBsawXr-30" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-28" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Uživatel" vertex="1">
+          <mxGeometry height="60" width="30" x="70" y="-660" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-32" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-30" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="CH46KQ4xdru8luBsawXr-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-33" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-30" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="CH46KQ4xdru8luBsawXr-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-34" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-30" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="CH46KQ4xdru8luBsawXr-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-35" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-30" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="CH46KQ4xdru8luBsawXr-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-30" parent="1" style="whiteSpace=wrap;html=1;verticalAlign=middle;" value="Může (a nemusí) mít jednu nebo více z rolí" vertex="1">
+          <mxGeometry height="70" width="165" x="124" y="-665" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-38" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="CH46KQ4xdru8luBsawXr-37" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-36" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="&quot;Život&quot; akce" vertex="1">
+          <mxGeometry height="70" width="140" x="20" y="-70" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-58" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="CH46KQ4xdru8luBsawXr-46" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-37" parent="1" style="whiteSpace=wrap;html=1;" value="Vytvoří Akci&lt;div&gt;&lt;br&gt;&lt;/div&gt;+ vyplní alespoň název akce&lt;br&gt;&lt;br&gt;+ při vyplněné místnosti a času, je akce zapsaná v kalendáři - v seznamu akcí pro danou místnost a čas (se zahrnutím pořadí, kdy k předběžné blokaci došlo)&lt;br&gt;&lt;br&gt;-&amp;gt; Status: Rozjedaná" vertex="1">
+          <mxGeometry height="186.25" width="170" x="210" y="-128.12" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-39" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Organizátor" vertex="1">
+          <mxGeometry height="60" width="30" x="189" y="-270" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-41" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Administrátor" vertex="1">
+          <mxGeometry height="60" width="30" x="370" y="-240" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-60" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-46" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="CH46KQ4xdru8luBsawXr-59" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-46" parent="1" style="whiteSpace=wrap;html=1;dashed=1;" value="Pokud není do X dnů potvrzená, dostává zprávu Organizátor" vertex="1">
+          <mxGeometry height="72.5" width="160" x="410" y="-71.25" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-48" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-41" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=0.676;exitY=0.717;exitDx=0;exitDy=0;exitPerimeter=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="450" y="-190" as="sourcePoint" />
+            <mxPoint x="660" y="-197" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-49" connectable="0" parent="CH46KQ4xdru8luBsawXr-48" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Pokud jakoukoliv změnu provede Administrátor,&lt;br&gt;dostane Organizátor a Zástup zprávu" vertex="1">
+          <mxGeometry relative="1" x="0.2751" y="-1" as="geometry">
+            <mxPoint x="-42" y="-24" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-56" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-39" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;" target="CH46KQ4xdru8luBsawXr-37">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="600" y="-120" as="sourcePoint" />
+            <mxPoint x="870" y="-120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-64" connectable="0" parent="CH46KQ4xdru8luBsawXr-56" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Vytvoření" vertex="1">
+          <mxGeometry relative="1" x="0.1401" y="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-62" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-59" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="CH46KQ4xdru8luBsawXr-61" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-59" parent="1" style="whiteSpace=wrap;html=1;dashed=1;" value="Pokud není do Y dnů potvrzená, dostává zprávu Organizátor a Administrátor" vertex="1">
+          <mxGeometry height="72.5" width="160" x="610" y="-71.25" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-68" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-61" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="CH46KQ4xdru8luBsawXr-67" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-61" parent="1" style="whiteSpace=wrap;html=1;" value="Pokud je akce na prvním místě v seznamu u místnosti a času:&lt;br&gt;&lt;br&gt;+ musí být vyplněné místo a čas&lt;br&gt;+ blokuje místo a čas napevno&lt;br&gt;+ dostává zprávu Správce místnosti&amp;nbsp;&lt;br&gt;&lt;br&gt;-&amp;gt; Status: Potvrzená" vertex="1">
+          <mxGeometry height="145" width="220" x="810" y="-107.5" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-63" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Organizátor" vertex="1">
+          <mxGeometry height="60" width="30" x="840" y="-270" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-65" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-63" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;" target="CH46KQ4xdru8luBsawXr-61">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="430" y="-180" as="sourcePoint" />
+            <mxPoint x="467" y="-98" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-66" connectable="0" parent="CH46KQ4xdru8luBsawXr-65" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Potvrzení" vertex="1">
+          <mxGeometry relative="1" x="0.1401" y="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-70" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="CH46KQ4xdru8luBsawXr-69" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1120" y="-180" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-75" connectable="0" parent="CH46KQ4xdru8luBsawXr-70" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Ano" vertex="1">
+          <mxGeometry relative="1" x="0.2161" y="-2" as="geometry">
+            <mxPoint x="6" y="88" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-76" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="CH46KQ4xdru8luBsawXr-77">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1120" y="20" />
+            </Array>
+            <mxPoint x="1230" y="20" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-78" connectable="0" parent="CH46KQ4xdru8luBsawXr-76" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Ne" vertex="1">
+          <mxGeometry relative="1" x="-0.0759" y="2" as="geometry">
+            <mxPoint x="8" y="-14" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-67" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Proběhla?" vertex="1">
+          <mxGeometry height="80" width="80" x="1060" y="-74.99" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-80" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-69" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="CH46KQ4xdru8luBsawXr-79" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-69" parent="1" style="whiteSpace=wrap;html=1;" value="Ukončení akce&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;+ vyplní povinné údaje&lt;/div&gt;&lt;br&gt;-&amp;gt; Status: Proběhlá" vertex="1">
+          <mxGeometry height="120" width="120" x="1160" y="-220" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-72" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Organizátor" vertex="1">
+          <mxGeometry height="60" width="30" x="1050" y="-270" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-73" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-72" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;" target="CH46KQ4xdru8luBsawXr-67">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="630" y="-190" as="sourcePoint" />
+            <mxPoint x="1097" y="-117" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-74" connectable="0" parent="CH46KQ4xdru8luBsawXr-73" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Vyhodnocení" vertex="1">
+          <mxGeometry relative="1" x="0.1401" y="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-77" parent="1" style="whiteSpace=wrap;html=1;" value="Zrušení akce&lt;br&gt;&lt;br&gt;+ uvolní místa a čas&lt;br&gt;+ info Správci místnosti&lt;br&gt;&lt;br&gt;-&amp;gt; Status: Zrušená" vertex="1">
+          <mxGeometry height="98.75" width="140" x="1160" y="-10" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-88" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-79" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="CH46KQ4xdru8luBsawXr-87" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-79" parent="1" style="shape=waypoint;sketch=0;size=6;pointerEvents=1;points=[];fillColor=default;resizable=0;rotatable=0;perimeter=centerPerimeter;snapToPoint=1;" value="" vertex="1">
+          <mxGeometry height="20" width="20" x="1310" y="-60" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-81" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-77" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.708;entryY=0.987;entryDx=0;entryDy=0;entryPerimeter=0;" target="CH46KQ4xdru8luBsawXr-79">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-90" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-87" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="CH46KQ4xdru8luBsawXr-89" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-87" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Uzavření akce&lt;br&gt;&lt;br&gt;+ vyplní Ekonomické údaje (které jsou povinné?)&lt;br&gt;&lt;br&gt;-&amp;gt; Status: Uzavřená" vertex="1">
+          <mxGeometry height="100" width="160" x="1350" y="-100" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-89" parent="1" style="ellipse;whiteSpace=wrap;html=1;rounded=0;" value="Konec" vertex="1">
+          <mxGeometry height="80" width="80" x="1530" y="-90" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-91" parent="1" style="whiteSpace=wrap;html=1;verticalAlign=middle;" value="Archiv akcí&lt;br&gt;&lt;br&gt;obsahuje všechny akce, které nebyly smazány (tedy i Rozjednané i Zrušené - s označením)" vertex="1">
+          <mxGeometry height="90" width="265" x="80" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-92" parent="1" style="whiteSpace=wrap;html=1;verticalAlign=middle;" value="Kalendář akcí a místností&lt;br&gt;&lt;br&gt;- zobrazení info o akcích (datum, čas, místnost, zodpovědná osoba)&lt;br&gt;- zobrazení přehledu obsazenosti místností&lt;br&gt;- u místnosti a času je seznam případných (náhradních) akcí&lt;br&gt;&lt;br&gt;-&amp;gt; filtry pro místnost, datum+čas, zodpovědnou osobu, status Akcí" vertex="1">
+          <mxGeometry height="110" width="375" x="410" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-93" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Administrátor" vertex="1">
+          <mxGeometry height="60" width="30" x="1410" y="-280" as="geometry" />
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-94" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-93" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;exitX=0.676;exitY=0.717;exitDx=0;exitDy=0;exitPerimeter=0;" target="CH46KQ4xdru8luBsawXr-87">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1490" y="-230" as="sourcePoint" />
+            <mxPoint x="1700" y="-237" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CH46KQ4xdru8luBsawXr-95" connectable="0" parent="CH46KQ4xdru8luBsawXr-94" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;div&gt;Uzavření&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="0.2751" y="-1" as="geometry">
+            <mxPoint x="-4" y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WlrSGn9Yvy7pgKiGwzBZ-7" edge="1" parent="1" source="WlrSGn9Yvy7pgKiGwzBZ-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="WlrSGn9Yvy7pgKiGwzBZ-6" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="WlrSGn9Yvy7pgKiGwzBZ-2" parent="1" style="whiteSpace=wrap;html=1;dashed=1;" value="Pokud dojde ke zrušení ve stavu Rozjednaná&lt;br&gt;&lt;br&gt;-&amp;gt; Status: Nedojednaná" vertex="1">
+          <mxGeometry height="72.5" width="160" x="510" y="16.25" as="geometry" />
+        </mxCell>
+        <mxCell id="WlrSGn9Yvy7pgKiGwzBZ-3" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-46" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;" target="WlrSGn9Yvy7pgKiGwzBZ-2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="880" y="120" as="sourcePoint" />
+            <mxPoint x="930" y="70" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WlrSGn9Yvy7pgKiGwzBZ-4" edge="1" parent="1" source="CH46KQ4xdru8luBsawXr-59" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;" target="WlrSGn9Yvy7pgKiGwzBZ-2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="650" y="80" as="sourcePoint" />
+            <mxPoint x="668" y="95" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WlrSGn9Yvy7pgKiGwzBZ-6" parent="1" style="ellipse;whiteSpace=wrap;html=1;rounded=0;" value="Konec" vertex="1">
+          <mxGeometry height="80" width="80" x="710" y="12.5" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

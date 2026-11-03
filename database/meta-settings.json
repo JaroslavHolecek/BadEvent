@@ -1,0 +1,89 @@
+{
+    "db": {
+        "contact_types": {
+            "name": 100,
+            "abbreviation": 20
+        },
+        "persons": {
+            "full_name": 255,
+            "short_name": 100
+        },
+        "contacts": {
+            "value": 255
+        },
+        "operations": {
+            "name": 100,
+            "code": 100
+        },
+        "roles": {
+            "name": 100,
+            "code": 100
+        },
+        "currencies": {
+            "code": 3,
+            "name": 100,
+            "symbol": 10,
+            "decimal_places_default": 2,
+            "decimal_places_min": 0,
+            "decimal_places_max": 4
+        },
+        "places": {
+            "name": 150,
+            "abbreviation": 30
+        },
+        "action_types": {
+            "name": 100,
+            "abbreviation": 30
+        },
+        "action_topics": {
+            "name": 100,
+            "abbreviation": 30
+        },
+        "action_formats": {
+            "name": 100,
+            "abbreviation": 30
+        },
+        "action_statuses": {
+            "name": 100,
+            "code": 100
+        },
+        "visitor_types": {
+            "name": 100
+        },
+        "visitor_categories": {
+            "name": 100
+        },
+        "income_types": {
+            "name": 100
+        },
+        "income_subtypes": {
+            "name": 100
+        },
+        "cost_types": {
+            "name": 100
+        },
+        "cost_objects": {
+            "name": 100
+        },
+        "events": {
+            "name": 255
+        },
+        "actions": {
+            "name": 255
+        },
+        "action_incomes": {
+            "amount_precision": 12,
+            "amount_scale": 2,
+            "reference_number": 100
+        },
+        "action_costs": {
+            "amount_precision": 12,
+            "amount_scale": 2,
+            "reference_number": 100
+        },
+        "audit_logs": {
+            "entity_type": 100,
+            "operation": 100
+        }
+    }
+}

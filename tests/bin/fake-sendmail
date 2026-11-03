@@ -1,0 +1,6 @@
+#!/bin/sh
+# Stand-in for sendmail during tests (php -d sendmail_path=...): stores each email as a file
+# in tests/tmp/mail/ so tests can read it (e.g. the login link) — nothing is ever sent.
+dir="$(dirname "$0")/../tmp/mail"
+mkdir -p "$dir"
+cat > "$dir/$(date +%s%N)-$$.eml"

@@ -1,0 +1,23 @@
+{
+  "name": "library/event-manager-tests",
+  "description": "Test suite of BadEvent. Dev-only, installed into tests/vendor/ so the production vendor/ never contains PHPUnit.",
+  "type": "project",
+  "license": "GPL-3.0-or-later",
+  "require": {
+    "php": ">=8.2",
+    "ext-pdo": "*",
+    "ext-pdo_pgsql": "*",
+    "ext-mbstring": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11.5"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "./"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}

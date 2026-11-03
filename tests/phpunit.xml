@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Run through tests/run.sh (it also points mail() at tests/bin/fake-sendmail) — see tests/README.md. -->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="bootstrap.php"
+         cacheDirectory="tmp/.phpunit.cache"
+         colors="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true">
+    <testsuites>
+        <!-- No database needed -->
+        <testsuite name="Unit">
+            <directory>Unit</directory>
+        </testsuite>
+        <!-- Repositories / services against a real PostgreSQL test database -->
+        <testsuite name="Integration">
+            <directory>Integration</directory>
+        </testsuite>
+        <!-- Whole requests through public/index.php on PHP's built-in web server -->
+        <testsuite name="Http">
+            <directory>Http</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

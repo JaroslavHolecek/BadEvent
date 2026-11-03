@@ -1,0 +1,36 @@
+# Test environment — see tests/README.md.
+#   Everything in Docker:     docker compose -f tests/docker-compose.yml run --rm php [phpunit args]
+#   Only PostgreSQL:          docker compose -f tests/docker-compose.yml up -d db   (then tests/run.sh locally with TEST_DB_PORT=54329)
+#   Stop + throw away data:   docker compose -f tests/docker-compose.yml down
+services:
+  db:
+    image: postgres:16-alpine   # keep the major version in line with the production server
+    environment:
+      POSTGRES_DB: badevent_test
+      POSTGRES_USER: badevent_test
+      POSTGRES_PASSWORD: badevent_test
+      TZ: Europe/Prague
+      PGTZ: Europe/Prague
+    ports:
+      - "127.0.0.1:54329:5432"
+    tmpfs:
+      - /var/lib/postgresql/data  # throwaway data, much faster than a volume
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U badevent_test -d badevent_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  php:
+    build: ./docker
+    user: "${UID:-1000}:${GID:-1000}"  # files created in tests/vendor and tests/tmp stay owned by you
+    volumes:
+      - ..:/app
+    environment:
+      TEST_DB_HOST: db
+      TEST_DB_PORT: "5432"
+      TZ: Europe/Prague
+    depends_on:
+      db:
+        condition: service_healthy
+    entrypoint: ["./run.sh"]
