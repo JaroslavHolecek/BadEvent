@@ -48,3 +48,6 @@ yarn-error.log*
 
 # put to server command
 deploy.sh
+
+# claude files
+.claude/
