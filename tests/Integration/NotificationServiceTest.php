@@ -91,6 +91,55 @@ final class NotificationServiceTest extends DatabaseTestCase
         $this->assertSame(1, (int) $this->scalar("SELECT COUNT(*) FROM action_alerts WHERE action_id = ? AND alert_code = 'no_room'", [$withoutRoom]));
     }
 
+    /**
+     * Připomínku dostanou jen aktuální organizátoři a zástupci akce a aktuální administrátoři —
+     * ne bývalý administrátor (role odebrána), ne odebraný organizátor/zástupce, ne nezúčastněný organizátor (regrese 4. 11. 2026).
+     */
+    public function testRemindersGoOnlyToCurrentOrganizersSubstitutesAndAdmins(): void
+    {
+        $substitute        = Fixtures::user('substitute');
+        $formerAdmin       = Fixtures::user(['administrator', 'organizer']);
+        $removedOrganizer  = Fixtures::user('organizer');
+        $removedSubstitute = Fixtures::user('substitute');
+        $uninvolved        = Fixtures::user('organizer');
+        $action = Fixtures::action([
+            'name'            => 'Bez místnosti',
+            'public_start_at' => Fixtures::at('+3 days 10:00'),
+            'organizers'      => [$this->organizer['id'], $removedOrganizer['id']],
+            'substitutes'     => [$substitute['id'], $removedSubstitute['id']],
+        ]);
+        $this->pdo->prepare('UPDATE user_roles SET deactivated_at = NOW() WHERE user_id = ? AND role_id = ?')
+            ->execute([$formerAdmin['id'], Fixtures::roleId('administrator')]);
+        $this->pdo->prepare('UPDATE action_organizers SET deactivated_at = NOW() WHERE action_id = ? AND user_id = ?')
+            ->execute([$action, $removedOrganizer['id']]);
+        $this->pdo->prepare('UPDATE action_substitutes SET deactivated_at = NOW() WHERE action_id = ? AND user_id = ?')
+            ->execute([$action, $removedSubstitute['id']]);
+
+        (new NotificationService())->sendMissingRoomReminders();
+
+        $this->assertCount(1, $this->notificationsOf($this->organizer['id']), 'organizer');
+        $this->assertCount(1, $this->notificationsOf($substitute['id']), 'substitute');
+        $this->assertCount(1, $this->notificationsOf($this->admin['id']), 'current administrator');
+        $this->assertSame([], $this->notificationsOf($formerAdmin['id']), 'former administrator');
+        $this->assertSame([], $this->notificationsOf($removedOrganizer['id']), 'removed organizer');
+        $this->assertSame([], $this->notificationsOf($removedSubstitute['id']), 'removed substitute');
+        $this->assertSame([], $this->notificationsOf($uninvolved['id']), 'organizer of other actions');
+    }
+
+    /** Kdo je zároveň zástupcem akce i administrátorem, dostane připomínku jen jednou. */
+    public function testRecipientWithSeveralRolesGetsTheReminderOnce(): void
+    {
+        Fixtures::action([
+            'public_start_at' => Fixtures::at('+3 days 10:00'),
+            'organizers'      => [$this->organizer['id']],
+            'substitutes'     => [$this->admin['id']],
+        ]);
+
+        (new NotificationService())->sendMissingRoomReminders();
+
+        $this->assertCount(1, $this->notificationsOf($this->admin['id']));
+    }
+
     /** Upozornění se odešle emailem na přihlašovací adresu uživatele a odeslání se zaznamená. */
     public function testNotificationIsEmailedToTheLoginAddress(): void
     {

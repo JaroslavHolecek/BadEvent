@@ -337,7 +337,6 @@ final class ActionController extends Controller
             $placeStates = $this->sanitizePlaceStates((array) ($data['place_state'] ?? []));
             $placeNotes  = $this->sanitizePlaceNotes((array) ($data['place_note'] ?? []));
             $repo->syncPlaceStates($actionId, $placeStates, $placeNotes);
-            (new \App\Services\PlaceQueueService())->reconcile();
 
             $repo->syncActionTypes($actionId, (array) ($data['action_type_id'] ?? []));
             $repo->syncActionTopics($actionId, (array) ($data['action_topic_id'] ?? []));
@@ -359,6 +358,10 @@ final class ActionController extends Controller
             $this->pdo()->rollBack();
             $this->failForm('Chyba při ukládání: ' . $e->getMessage(), '/actions/create');
         }
+
+        // Only after commit: notifications must go to the saved organizers/substitutes, and an email
+        // already sent can't be "rolled back" together with a failed save (it'd be sent again later).
+        (new \App\Services\PlaceQueueService())->reconcile();
 
         (new AuditLogService())->log($userId, 'action', $actionId, 'create', null, ['name' => trim($data['name']), 'event_id' => $eventId]);
 
@@ -561,7 +564,6 @@ final class ActionController extends Controller
         try {
             $repo->update($id, $update);
             $repo->syncPlaceStates($id, $placeStates, $placeNotes);
-            (new \App\Services\PlaceQueueService())->reconcile();
             $repo->syncActionTypes($id, $actionTypeIds);
             $repo->syncActionTopics($id, $actionTopicIds);
             $repo->syncActionFormats($id, $actionFormatIds);
@@ -580,6 +582,9 @@ final class ActionController extends Controller
             $this->pdo()->rollBack();
             $this->failForm('Chyba při ukládání: ' . $e->getMessage(), '/actions/' . $id . '/edit');
         }
+
+        // After commit — see create(): recipients are the organizers/substitutes as just saved.
+        (new \App\Services\PlaceQueueService())->reconcile();
 
         (new AuditLogService())->log(
             Auth::userId(),
@@ -618,12 +623,13 @@ final class ActionController extends Controller
         $this->pdo()->beginTransaction();
         try {
             $repo->syncPlaceStates($id, $placeStates, $placeNotes);
-            (new \App\Services\PlaceQueueService())->reconcile();
             $this->pdo()->commit();
         } catch (\Throwable $e) {
             $this->pdo()->rollBack();
             $this->failForm('Chyba při ukládání místností: ' . $e->getMessage(), '/actions/' . $id . '/edit', [], ['action-form-places']);
         }
+
+        (new \App\Services\PlaceQueueService())->reconcile(); // after commit — see create()
 
         (new AuditLogService())->log(
             Auth::userId(),

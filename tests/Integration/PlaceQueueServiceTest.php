@@ -73,6 +73,54 @@ final class PlaceQueueServiceTest extends DatabaseTestCase
         $this->assertSame([], $this->notificationsOf($this->organizerA['id']));
     }
 
+    /** Upozornění „jste první“ dostane i zástupce akce, ale ne bývalý (odebraný) organizátor ani bývalý administrátor. */
+    public function testFirstInQueueGoesToCurrentOrganizersAndSubstitutesOnly(): void
+    {
+        $substitute       = Fixtures::user('substitute');
+        $removedOrganizer = Fixtures::user('organizer');
+        $formerAdmin      = Fixtures::user(['administrator', 'organizer']);
+        $this->pdo->prepare('UPDATE user_roles SET deactivated_at = NOW() WHERE user_id = ? AND role_id = ?')
+            ->execute([$formerAdmin['id'], Fixtures::roleId('administrator')]);
+        $a = Fixtures::action([
+            'public_start_at' => Fixtures::at('+15 days 17:00'),
+            'organizers'      => [$this->organizerA['id'], $removedOrganizer['id']],
+            'substitutes'     => [$substitute['id']],
+        ]);
+        $this->pdo->prepare('UPDATE action_organizers SET deactivated_at = NOW() WHERE action_id = ? AND user_id = ?')
+            ->execute([$a, $removedOrganizer['id']]);
+        Fixtures::request($a, $this->room, Fixtures::at('-1 hour'));
+
+        (new PlaceQueueService())->reconcile();
+
+        $this->assertCount(1, $this->notificationsOf($this->organizerA['id']));
+        $this->assertCount(1, $this->notificationsOf($substitute['id']));
+        $this->assertSame([], $this->notificationsOf($removedOrganizer['id']));
+        $this->assertSame([], $this->notificationsOf($formerAdmin['id']));
+        $this->assertSame([], $this->notificationsOf($this->admin['id']), '"first in queue" is not an admin matter');
+    }
+
+    /**
+     * Zrušení dávno potvrzené místnosti nespustí hned 7/14denní připomínky — lhůta běží až od chvíle,
+     * kdy akce čeká na nepotvrzenou místnost; přijde jen „jste první ve frontě“ (regrese 4. 11. 2026).
+     */
+    public function testCancellingAnOldConfirmationDoesNotEscalateImmediately(): void
+    {
+        [$a] = $this->competingActions();
+        Fixtures::confirm($a, $this->room);
+        (new PlaceQueueService())->reconcile();
+        $this->assertNull($this->scalar('SELECT first_at_queue_at FROM action_places_desire WHERE action_id = ?', [$a]), 'a confirmed room keeps no waiting clock');
+
+        // Simulate that the confirmation was made weeks ago (the old code kept the clock running meanwhile).
+        $this->pdo->prepare("UPDATE action_places_desire SET first_at_queue_at = NOW() - INTERVAL '20 days' WHERE action_id = ? AND first_at_queue_at IS NOT NULL")
+            ->execute([$a]);
+        $this->pdo->prepare('DELETE FROM action_places WHERE action_id = ?')->execute([$a]);
+        (new PlaceQueueService())->reconcile();
+        (new PlaceQueueService())->reconcile();
+
+        $this->assertSame(['Akce "Akce A" je první ve frontě na místnost "Klubovna". Můžete si ji zabrat.'], $this->notificationsOf($this->organizerA['id']));
+        $this->assertSame([], $this->notificationsOf($this->admin['id']));
+    }
+
     /** Po 7 dnech bez zabrání jde připomínka organizátorům (jednou), po 14 dnech i administrátorům. */
     public function testLongWaitingFirstPlaceEscalates(): void
     {

@@ -36,7 +36,7 @@ return [
     ],
 
     // Thresholds of the time-based notifications (in-app + email), checked by cron/daily.php and
-    // on every "Můj přehled" load. A missing key falls back to the same default as shown here.
+    // on "Můj přehled" load (see the interval below). A missing key falls back to the same default as shown here.
     'notifications' => [
         'draft_reminder_days'     => [30, 7], // reminders this many days before the start of a still-Rozjednaná action
         'overdue_lookback_days'   => 30,      // Rozjednaná/Potvrzená action that ended at most this many days ago -> "change its status"
@@ -44,5 +44,11 @@ return [
         'queue_first_notify_days' => 7,       // 1st in a room queue this many days without the room -> organizers
         'queue_first_admin_days'  => 14,      // 1st in a room queue this many days without the room -> administrators
         'email_retry_days'        => 2,       // emails that failed to send are retried for this many days
+        // The checks also run when someone (any user) opens "Můj přehled", over ALL actions:
+        //   < 0 = never from "Můj přehled" (only cron/daily.php, if it's in crontab)
+        //     0 = on every "Můj přehled" load
+        //   > 0 = at most once per this many minutes after their last run from "Můj přehled"
+        // Default 1200 (20 h) = in effect once a day, give or take when people log in.
+        'time_related_checks_dashboard_interval_minutes' => 1200,
     ],
 ];

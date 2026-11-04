@@ -98,7 +98,7 @@ Check the PHP CLI binary path (`which php`) — it has to be PHP 8.2+ too, CLI o
 ## Cron (daily notifications)
 `cron/daily.php` checks everything that may need a notification (in-app + email to the user's login email). It runs from the command line only.
 
-- room queue — request reached 1st place; 1st place for 7 days (organizers) / 14 days (admins) without a confirmed room
+- room queue — request reached 1st place; 1st place for 7 days (organizers + substitutes) / 14 days (admins) without a confirmed room
 - still-draft (Rozjednaná) actions 30 and 7 days before their start
 - Rozjednaná/Potvrzená actions that already ended (within the last 30 days) and still wait for a status change
 - Rozjednaná/Potvrzená actions starting within 7 days with no confirmed room
@@ -113,7 +113,13 @@ Run it once a day, e.g. at 6:00 (`crontab -e`):
 0 6 * * * /usr/bin/php /path/to/BadEvent/cron/daily.php >> /path/to/BadEvent/storage/logs/cron.log 2>&1
 ```
 
-All checks are idempotent (each notification is recorded as sent), so running it more often is safe. The same checks (except the email retry) also run on every "Můj přehled" load, so notifications still go out without cron — just later, when someone opens the app.
+All checks are idempotent (each notification is recorded as sent), so running it more often is safe.
+
+The list of checks lives in one place, `NotificationService::runTimeBasedChecks()`, and every check covers **all** actions. It runs:
+- from cron — whenever `cron/daily.php` is in crontab (that is the switch, there's no setting for it);
+- from "Můj přehled" — by any user, according to `notifications.time_related_checks_dashboard_interval_minutes` in `.envConfig/app.php`: negative = never (cron only), `0` = on every load, positive = at most once per that many minutes after the last dashboard run (default `1200` = 20 h, i.e. in effect once a day). The time of the last run is stored in the `scheduled_runs` table (migration `database/migrations/2026-11-04_scheduled_runs.sql`); if the table is missing, the dashboard skips the checks and logs it.
+
+Notifications go only to the action's current (not removed) organizers and substitutes, plus the users who currently hold the administrator role where the situation concerns administrators (draft/overdue/no-room reminders, 14 days first in queue). Status-change and "first in queue" notifications after saving an action are sent right away, independently of these settings.
 
 ## Tests
 

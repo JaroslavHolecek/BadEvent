@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Core\Database;
-use App\Repositories\UserRepository;
 use PDO;
 
 /**
@@ -34,17 +33,18 @@ final class PlaceQueueService
         $this->notifications = new NotificationService();
     }
 
+    /** For calls after saving an action: a failing queue check must never take the page that triggered it down. */
     public function reconcile(): void
     {
         try {
-            $this->doReconcile();
+            $this->reconcileOrThrow();
         } catch (\Throwable $e) {
-            // A failing queue check must never take the page that triggered it down.
             error_log('PlaceQueueService::reconcile failed: ' . $e->getMessage());
         }
     }
 
-    private function doReconcile(): void
+    /** Same as reconcile(), but lets a failure through — for NotificationService::runTimeBasedChecks(), which reports it. */
+    public function reconcileOrThrow(): void
     {
         $sql = <<<SQL
             SELECT * FROM (
@@ -98,7 +98,10 @@ final class PlaceQueueService
             $label     = 'Akce "' . $r['action_name'] . '"';
             $room      = 'místnost "' . $r['place_name'] . '"';
 
-            if (!$isFirst) {
+            // Only "first in queue AND room not confirmed yet" is tracked. A confirmed room has nothing
+            // to wait for, so its clock is cleared — otherwise cancelling an old confirmation would
+            // make the 7/14-day reminders fire immediately, counted from long before.
+            if (!$isFirst || $confirmed) {
                 $this->pdo->prepare('UPDATE action_places_desire SET first_at_queue_at = NULL WHERE id = ? AND first_at_queue_at IS NOT NULL')
                     ->execute([$id]);
                 continue;
@@ -107,7 +110,7 @@ final class PlaceQueueService
             if (!$wasFirst) {
                 $stmt = $this->pdo->prepare('UPDATE action_places_desire SET first_at_queue_at = CURRENT_TIMESTAMP WHERE id = ? AND first_at_queue_at IS NULL');
                 $stmt->execute([$id]);
-                if ($stmt->rowCount() === 1 && !$confirmed && $this->markNotified($id, $r['last_notification_at'])) {
+                if ($stmt->rowCount() === 1 && $this->markNotified($id, $r['last_notification_at'])) {
                     $this->notifyRecipients($actionId, "{$label} je první ve frontě na {$room}. Můžete si ji zabrat.");
                 }
                 continue;
@@ -115,7 +118,7 @@ final class PlaceQueueService
 
             $weekDue = $bool($r['week_due']);
             $fortDue = $bool($r['fortnight_due']);
-            if ($confirmed || (!$weekDue && !$fortDue) || !$this->markNotified($id, $r['last_notification_at'])) {
+            if ((!$weekDue && !$fortDue) || !$this->markNotified($id, $r['last_notification_at'])) {
                 continue;
             }
 
@@ -124,8 +127,8 @@ final class PlaceQueueService
             }
             if ($fortDue) {
                 $text = "{$label} je již {$adminDays} a více dní první ve frontě na {$room} a stále nemá tuto místnost zabranou.";
-                foreach ((new UserRepository())->listByRoleCode('administrator') as $admin) {
-                    $this->notifications->send((int) $admin['id'], $text, $actionId);
+                foreach ($this->notifications->adminIds() as $adminId) {
+                    $this->notifications->send($adminId, $text, $actionId);
                 }
             }
         }

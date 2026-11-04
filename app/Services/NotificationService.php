@@ -27,9 +27,50 @@ final class NotificationService
         'queue_first_notify_days' => 7,       // 1st in room queue this long without the room -> organizers
         'queue_first_admin_days'  => 14,      // 1st in room queue this long without the room -> administrators
         'email_retry_days'        => 2,       // failed emails are retried for this many days
+        // runTimeBasedChecks() from the "Můj přehled" load: <0 never, 0 on every load,
+        // >0 at most once per this many minutes after its last run there (1200 = 20 h ≈ once a day)
+        'time_related_checks_dashboard_interval_minutes' => 1200,
     ];
 
     private static ?array $settings = null;
+
+    /**
+     * THE list of time-based notification checks — the only place where it's defined. Called by
+     * cron/daily.php and (per time_related_checks_dashboard_interval_minutes) by the dashboard; the
+     * callers decide when to call it, this method just runs everything, over ALL actions.
+     * Each check is idempotent (records what it sent), so running it from both never sends anything
+     * twice. A failing check doesn't stop the others.
+     *
+     * @return array<string, array{error: ?\Throwable, seconds: float}> per check (Czech name for the cron log)
+     */
+    public function runTimeBasedChecks(): array
+    {
+        $checks = [
+            // Room queue: request reached 1st place, 1st place for 7+ days (organizers + substitutes), 14+ days (admins).
+            'Fronta na místnosti'        => fn() => (new PlaceQueueService())->reconcileOrThrow(),
+            // Still-draft (Rozjednaná) actions 30 and 7 days before their start (organizers, substitutes + admins).
+            'Blížící se Rozjednané akce' => fn() => $this->sendDraftStartReminders(),
+            // Rozjednaná/Potvrzená action that already ended (last 30 days) — status should be moved on (organizers, substitutes + admins).
+            'Akce po termínu'            => fn() => $this->sendOverdueActionReminders(),
+            // Rozjednaná/Potvrzená action starting within 7 days with no confirmed room (organizers, substitutes + admins).
+            'Akce bez místnosti'         => fn() => $this->sendMissingRoomReminders(),
+            // Emails whose hand-off failed in the last 2 days get one more try each run.
+            'Opakované odeslání emailů'  => fn() => $this->retryFailedEmails(),
+        ];
+
+        $results = [];
+        foreach ($checks as $name => $check) {
+            $started = microtime(true);
+            $error   = null;
+            try {
+                $check();
+            } catch (\Throwable $e) {
+                $error = $e;
+            }
+            $results[$name] = ['error' => $error, 'seconds' => microtime(true) - $started];
+        }
+        return $results;
+    }
 
     public static function setting(string $key): mixed
     {
@@ -149,7 +190,7 @@ final class NotificationService
     }
 
     /**
-     * Reminds organizers + administrators that a draft action is approaching its public start
+     * Reminds organizers, substitutes + administrators that a draft action is approaching its public start
      * (setting draft_reminder_days, by default 30 and 7 days ahead). Called from cron/daily.php and opportunistically on every dashboard load —
      * action_start_reminders records which reminder was already sent for which start date, so each
      * fires exactly once; if the start date moves, the reminders fire again for the new date.
@@ -205,7 +246,7 @@ final class NotificationService
 
     /**
      * Rozjednaná/Potvrzená action whose public end has passed — its status should have been moved on
-     * (Proběhlá / Zrušená / Nedojednaná). One reminder per end date to organizers + administrators.
+     * (Proběhlá / Zrušená / Nedojednaná). One reminder per end date to organizers, substitutes + administrators.
      * Only actions ended within overdue_lookback_days, so the first run doesn't flood with old ones.
      */
     public function sendOverdueActionReminders(): void
@@ -267,22 +308,21 @@ final class NotificationService
         return $stmt->fetchColumn() !== false;
     }
 
-    private ?array $adminIds = null;
-
+    /**
+     * Action's current organizers + substitutes (actionRecipients) and the current administrators,
+     * each once. Both lists are read at send time, so only people holding the role right now get it.
+     */
     private function sendToOrganizersAndAdmins(int $actionId, string $text): void
     {
-        $this->adminIds ??= array_map('intval', array_column((new \App\Repositories\UserRepository())->listByRoleCode('administrator'), 'id'));
-        foreach (array_unique(array_merge($this->actionOrganizerIds($actionId), $this->adminIds)) as $userId) {
+        foreach (array_unique(array_merge($this->actionRecipients($actionId), $this->adminIds())) as $userId) {
             $this->send($userId, $text, $actionId);
         }
     }
 
-    /** User ids of the action's active organizers (without substitutes). */
-    private function actionOrganizerIds(int $actionId): array
+    /** User ids of users who currently hold the (active) administrator role. */
+    public function adminIds(): array
     {
-        $stmt = $this->pdo->prepare('SELECT user_id FROM action_organizers WHERE action_id = :id AND deactivated_at IS NULL');
-        $stmt->execute([':id' => $actionId]);
-        return array_map('intval', $stmt->fetchAll(PDO::FETCH_COLUMN) ?: []);
+        return array_map('intval', array_column((new \App\Repositories\UserRepository())->listByRoleCode('administrator'), 'id'));
     }
 
     /** Returns unread notifications for a user, newest first. */
@@ -323,7 +363,7 @@ final class NotificationService
         $stmt->execute([':user_id' => $userId]);
     }
 
-    /** User ids of the action's active organizers and substitutes. */
+    /** User ids of the action's active (not removed) organizers and substitutes — the only action-level recipients. */
     public function actionRecipients(int $actionId): array
     {
         $sql = <<<SQL

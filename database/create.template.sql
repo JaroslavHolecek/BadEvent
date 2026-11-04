@@ -366,7 +366,7 @@ CREATE TABLE action_places_desire (
     place_id INTEGER NOT NULL REFERENCES places(id) ON DELETE RESTRICT,
     note TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    first_at_queue_at TIMESTAMP,    -- when this request reached 1st place in the room's queue (NULL = not first); maintained by PlaceQueueService::reconcile()
+    first_at_queue_at TIMESTAMP,    -- since when this request is 1st in the room's queue without the room confirmed (NULL = not first, or already confirmed); maintained by PlaceQueueService::reconcile()
     last_notification_at TIMESTAMP, -- when a queue notification was last created for this request
     UNIQUE (action_id, place_id)
 );
@@ -588,6 +588,19 @@ CREATE TABLE IF NOT EXISTS action_alerts (
     ref_date DATE NOT NULL,
     sent_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (action_id, alert_code, ref_date)
+);
+
+-- =========================================================
+-- Periodic jobs triggered by page loads that must not run more often than a set interval,
+-- whoever triggers them. One row per job:
+--   dashboard_checks — time-based notification checks run from the "Můj přehled" load
+--                      (NotificationService::runTimeBasedChecks), at most once per
+--                      notifications.time_related_checks_dashboard_interval_minutes.
+-- See ScheduledRunRepository::claimIfDue().
+-- =========================================================
+CREATE TABLE IF NOT EXISTS scheduled_runs (
+    code VARCHAR(50) PRIMARY KEY,
+    last_run_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 

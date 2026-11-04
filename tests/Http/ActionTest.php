@@ -76,6 +76,41 @@ final class ActionTest extends HttpTestCase
         $this->assertSame(0, (int) $this->scalar('SELECT COUNT(*) FROM action_places WHERE action_id = ?', [$id]));
     }
 
+    /**
+     * Autor nové akce, která je s požadovanou místností první ve frontě, dostane upozornění „jste první“
+     * (fronta se kontroluje až po uložení organizátorů — regrese 4. 11. 2026).
+     */
+    public function testCreatorOfNewActionIsNotifiedAboutFirstPlaceInQueue(): void
+    {
+        $organizer = $this->loginAs('organizer');
+
+        $this->createdActionId($this->http->post('/actions', $this->createForm(['place_state' => [$this->room => 'requested']])));
+
+        $texts = $this->notificationsOf($organizer['id']);
+        $this->assertCount(1, $texts);
+        $this->assertStringContainsString('je první ve frontě na místnost "Velký sál"', $texts[0]);
+    }
+
+    /** Organizátor odebraný při úpravě akce už upozornění z této úpravy nedostane, nově přidaný ano (regrese 4. 11. 2026). */
+    public function testQueueNotificationAfterEditGoesToTheNewOrganizersOnly(): void
+    {
+        $this->loginAs('administrator');
+        $oldOrganizer = Fixtures::user('organizer');
+        $newOrganizer = Fixtures::user('organizer');
+        $action  = Fixtures::action(['organizers' => [$oldOrganizer['id']]]);
+        $eventId = (int) $this->scalar('SELECT event_id FROM actions WHERE id = ?', [$action]);
+
+        $response = $this->http->post("/actions/{$action}", $this->createForm([
+            'event_id'     => (string) $eventId,
+            'place_state'  => [$this->room => 'requested'],
+            'organizer_id' => [$newOrganizer['id']],
+        ]));
+
+        $this->assertTrue($response->isRedirectTo("/actions/{$action}"), 'edit saved');
+        $this->assertSame([], $this->notificationsOf($oldOrganizer['id']), 'removed organizer');
+        $this->assertCount(1, $this->notificationsOf($newOrganizer['id']), 'new organizer');
+    }
+
     /** Neplatný formulář (bez názvu, nesmyslný rok, bez události) nic neuloží. */
     public function testInvalidActionIsNotSaved(): void
     {

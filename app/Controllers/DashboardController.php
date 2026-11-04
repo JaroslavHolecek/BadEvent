@@ -10,6 +10,7 @@ use App\Core\Request;
 use App\Core\View;
 use App\Repositories\ActionRepository;
 use App\Repositories\BuildingCodeDutyRepository;
+use App\Repositories\ScheduledRunRepository;
 use App\Services\NotificationService;
 use App\Services\PermissionService;
 
@@ -24,15 +25,7 @@ final class DashboardController extends Controller
         $notifications = new NotificationService();
         $permissions   = new PermissionService();
 
-        (new \App\Services\PlaceQueueService())->reconcile();
-        // Same time-based checks as cron/daily.php — a failing check must never take the dashboard down.
-        try {
-            $notifications->sendDraftStartReminders();
-            $notifications->sendOverdueActionReminders();
-            $notifications->sendMissingRoomReminders();
-        } catch (\Throwable $e) {
-            error_log('Dashboard notification checks failed: ' . $e->getMessage());
-        }
+        $this->runDailyNotificationChecks($notifications);
 
         $myActions     = $actions->listForUser($userId);
         $isAdmin       = $permissions->isAdmin($userId);
@@ -92,6 +85,35 @@ final class DashboardController extends Controller
             'dayNote'    => $todayDuty['note'] ?? null,
             'flash'      => $this->getFlash(),
         ]);
+    }
+
+    /**
+     * The same time-based checks as cron/daily.php (over ALL actions, not only this user's), when
+     * notifications.time_related_checks_dashboard_interval_minutes says so: <0 never, 0 on every
+     * load, >0 at most once per that many minutes since their last dashboard run (default 20 h),
+     * by whichever user; scheduled_runs remembers the time. Nothing here may take the dashboard
+     * down: if the guard itself fails (e.g. table missing), the checks are skipped, not run on every load.
+     */
+    private function runDailyNotificationChecks(NotificationService $notifications): void
+    {
+        $interval = (int) NotificationService::setting('time_related_checks_dashboard_interval_minutes');
+        if ($interval < 0) {
+            return; // never from the dashboard (cron only)
+        }
+        try {
+            if (!(new ScheduledRunRepository())->claimIfDue(ScheduledRunRepository::DASHBOARD_CHECKS, $interval)) {
+                return; // ran recently enough
+            }
+        } catch (\Throwable $e) {
+            error_log('Dashboard notification checks skipped, scheduled_runs guard failed: ' . $e->getMessage());
+            return;
+        }
+
+        foreach ($notifications->runTimeBasedChecks() as $check => $result) {
+            if ($result['error'] !== null) {
+                error_log("Dashboard notification check '{$check}' failed: " . $result['error']->getMessage());
+            }
+        }
     }
 
     public function markNotificationRead(Request $request, array $params): void
