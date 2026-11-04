@@ -9,9 +9,10 @@ use PDO;
 
 /**
  * Who codes/uncodes the building on a given day (primary + substitute), plus an optional note for
- * that day shown to every user on their dashboard. Only ever needs to hold
- * roughly 2 months back and 2 months forward of data — see cleanup_old_building_code_duty() in
- * the schema, called here on every use so the table never needs a separate cron job to stay small.
+ * that day shown to every user on their dashboard. Only ever needs to hold roughly 2 months back
+ * and 2 months forward of data. Rows exist only for days someone filled in (the forward window is
+ * computed from today, nothing has to be added); old rows are dropped by cleanupOld(), which runs
+ * as one of the time-based actions (NotificationService::runTimeBasedActions — cron / dashboard).
  */
 final class BuildingCodeDutyRepository
 {
@@ -20,6 +21,11 @@ final class BuildingCodeDutyRepository
     public function __construct()
     {
         $this->pdo = Database::connection();
+    }
+
+    /** Drops rows (and their day notes) older than 2 months — schema function cleanup_old_building_code_duty(). */
+    public function cleanupOld(): void
+    {
         $this->pdo->exec('SELECT cleanup_old_building_code_duty()');
     }
 

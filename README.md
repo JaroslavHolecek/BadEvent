@@ -115,7 +115,7 @@ Run it once a day, e.g. at 6:00 (`crontab -e`):
 
 All checks are idempotent (each notification is recorded as sent), so running it more often is safe.
 
-The list of checks lives in one place, `NotificationService::runTimeBasedChecks()`, and every check covers **all** actions. It runs:
+The list of these time-based actions (the checks above + the building-code-duty cleanup) lives in one place, `NotificationService::runTimeBasedActions()`, and every check covers **all** actions. It runs:
 - from cron — whenever `cron/daily.php` is in crontab (that is the switch, there's no setting for it);
 - from "Můj přehled" — by any user, according to `notifications.time_related_checks_dashboard_interval_minutes` in `.envConfig/app.php`: negative = never (cron only), `0` = on every load, positive = at most once per that many minutes after the last dashboard run (default `1200` = 20 h, i.e. in effect once a day). The time of the last run is stored in the `scheduled_runs` table (migration `database/migrations/2026-11-04_scheduled_runs.sql`); if the table is missing, the dashboard skips the checks and logs it.
 

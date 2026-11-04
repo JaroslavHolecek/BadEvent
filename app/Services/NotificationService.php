@@ -27,7 +27,7 @@ final class NotificationService
         'queue_first_notify_days' => 7,       // 1st in room queue this long without the room -> organizers
         'queue_first_admin_days'  => 14,      // 1st in room queue this long without the room -> administrators
         'email_retry_days'        => 2,       // failed emails are retried for this many days
-        // runTimeBasedChecks() from the "Můj přehled" load: <0 never, 0 on every load,
+        // runTimeBasedActions() from the "Můj přehled" load: <0 never, 0 on every load,
         // >0 at most once per this many minutes after its last run there (1200 = 20 h ≈ once a day)
         'time_related_checks_dashboard_interval_minutes' => 1200,
     ];
@@ -35,17 +35,18 @@ final class NotificationService
     private static ?array $settings = null;
 
     /**
-     * THE list of time-based notification checks — the only place where it's defined. Called by
-     * cron/daily.php and (per time_related_checks_dashboard_interval_minutes) by the dashboard; the
-     * callers decide when to call it, this method just runs everything, over ALL actions.
-     * Each check is idempotent (records what it sent), so running it from both never sends anything
-     * twice. A failing check doesn't stop the others.
+     * THE list of time-based actions (notification checks over ALL actions + data housekeeping) —
+     * the only place where it's defined. Called by cron/daily.php and (per
+     * time_related_checks_dashboard_interval_minutes) by the dashboard; the callers decide when to
+     * call it, this method just runs everything. Each action is idempotent (notifications record
+     * what they sent), so running it from both never sends anything twice. A failing action doesn't
+     * stop the others.
      *
-     * @return array<string, array{error: ?\Throwable, seconds: float}> per check (Czech name for the cron log)
+     * @return array<string, array{error: ?\Throwable, seconds: float}> per action (Czech name for the cron log)
      */
-    public function runTimeBasedChecks(): array
+    public function runTimeBasedActions(): array
     {
-        $checks = [
+        $actions = [
             // Room queue: request reached 1st place, 1st place for 7+ days (organizers + substitutes), 14+ days (admins).
             'Fronta na místnosti'        => fn() => (new PlaceQueueService())->reconcileOrThrow(),
             // Still-draft (Rozjednaná) actions 30 and 7 days before their start (organizers, substitutes + admins).
@@ -56,14 +57,16 @@ final class NotificationService
             'Akce bez místnosti'         => fn() => $this->sendMissingRoomReminders(),
             // Emails whose hand-off failed in the last 2 days get one more try each run.
             'Opakované odeslání emailů'  => fn() => $this->retryFailedEmails(),
+            // Not a notification: drops building-code-duty rows (and their day notes) older than 2 months.
+            'Úklid kódování budovy'      => fn() => (new \App\Repositories\BuildingCodeDutyRepository())->cleanupOld(),
         ];
 
         $results = [];
-        foreach ($checks as $name => $check) {
+        foreach ($actions as $name => $action) {
             $started = microtime(true);
             $error   = null;
             try {
-                $check();
+                $action();
             } catch (\Throwable $e) {
                 $error = $e;
             }

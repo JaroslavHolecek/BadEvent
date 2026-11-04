@@ -25,7 +25,7 @@ final class DashboardController extends Controller
         $notifications = new NotificationService();
         $permissions   = new PermissionService();
 
-        $this->runDailyNotificationChecks($notifications);
+        $this->runTimeBasedActions($notifications);
 
         $myActions     = $actions->listForUser($userId);
         $isAdmin       = $permissions->isAdmin($userId);
@@ -88,13 +88,14 @@ final class DashboardController extends Controller
     }
 
     /**
-     * The same time-based checks as cron/daily.php (over ALL actions, not only this user's), when
+     * The same time-based actions as cron/daily.php (notification checks over ALL actions, not only
+     * this user's, + building-code-duty cleanup), when
      * notifications.time_related_checks_dashboard_interval_minutes says so: <0 never, 0 on every
      * load, >0 at most once per that many minutes since their last dashboard run (default 20 h),
      * by whichever user; scheduled_runs remembers the time. Nothing here may take the dashboard
      * down: if the guard itself fails (e.g. table missing), the checks are skipped, not run on every load.
      */
-    private function runDailyNotificationChecks(NotificationService $notifications): void
+    private function runTimeBasedActions(NotificationService $notifications): void
     {
         $interval = (int) NotificationService::setting('time_related_checks_dashboard_interval_minutes');
         if ($interval < 0) {
@@ -105,13 +106,13 @@ final class DashboardController extends Controller
                 return; // ran recently enough
             }
         } catch (\Throwable $e) {
-            error_log('Dashboard notification checks skipped, scheduled_runs guard failed: ' . $e->getMessage());
+            error_log('Dashboard time-based actions skipped, scheduled_runs guard failed: ' . $e->getMessage());
             return;
         }
 
-        foreach ($notifications->runTimeBasedChecks() as $check => $result) {
+        foreach ($notifications->runTimeBasedActions() as $name => $result) {
             if ($result['error'] !== null) {
-                error_log("Dashboard notification check '{$check}' failed: " . $result['error']->getMessage());
+                error_log("Dashboard time-based action '{$name}' failed: " . $result['error']->getMessage());
             }
         }
     }

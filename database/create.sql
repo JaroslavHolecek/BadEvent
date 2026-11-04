@@ -593,8 +593,8 @@ CREATE TABLE IF NOT EXISTS action_alerts (
 -- =========================================================
 -- Periodic jobs triggered by page loads that must not run more often than a set interval,
 -- whoever triggers them. One row per job:
---   dashboard_checks — time-based notification checks run from the "Můj přehled" load
---                      (NotificationService::runTimeBasedChecks), at most once per
+--   dashboard_checks — time-based actions run from the "Můj přehled" load
+--                      (NotificationService::runTimeBasedActions), at most once per
 --                      notifications.time_related_checks_dashboard_interval_minutes.
 -- See ScheduledRunRepository::claimIfDue().
 -- =========================================================
@@ -627,9 +627,9 @@ CREATE INDEX idx_audit_logs_created_at ON audit_logs(created_at);
 -- Building code duty (kdo daný den koduje/odkoduje budovu)
 -- =========================================================
 -- Only ever needs to hold roughly 2 months back and 2 months forward of data (per app spec) — kept
--- from growing unbounded by cleanup_old_building_code_duty(), which the app calls opportunistically
--- (every time this table is read/written, see BuildingCodeDutyRepository) instead of relying on a
--- separate cron job, since this table is tiny and the DELETE is cheap even run that often.
+-- from growing unbounded by cleanup_old_building_code_duty(), called by BuildingCodeDutyRepository::cleanupOld()
+-- as one of the time-based actions (NotificationService::runTimeBasedActions — cron/daily.php and
+-- "Můj přehled" per notifications.time_related_checks_dashboard_interval_minutes).
 
 CREATE TABLE building_code_duty (
     id SERIAL PRIMARY KEY,

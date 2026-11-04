@@ -43,7 +43,7 @@ final class PlaceQueueService
         }
     }
 
-    /** Same as reconcile(), but lets a failure through — for NotificationService::runTimeBasedChecks(), which reports it. */
+    /** Same as reconcile(), but lets a failure through — for NotificationService::runTimeBasedActions(), which reports it. */
     public function reconcileOrThrow(): void
     {
         $sql = <<<SQL
