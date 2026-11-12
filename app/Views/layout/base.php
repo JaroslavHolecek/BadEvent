@@ -9,6 +9,7 @@ $__canManageUsers = false;
 $__canManageDictionaries = false;
 $__canViewPeople  = false;
 $__canExport      = false;
+$__isTechAdmin    = false;
 $__displayName    = null;
 $__noPermission   = false;
 
@@ -26,6 +27,7 @@ if ($__authed) {
     $__canManageDictionaries = in_array('dictionaries.manage', $__allowedOps, true);
     $__canViewPeople  = in_array('person.view', $__allowedOps, true);
     $__canExport      = $__perm->isAdmin($__userId);
+    $__isTechAdmin    = $__perm->isTechAdmin($__userId);
     $__displayName    = $__headerInfo ? ($__headerInfo['full_name'] ?: $__headerInfo['email']) : null;
     // A user with no role (or a role granting no operations at all) can't meaningfully use any
     // page — show a single explanatory notice instead of pages silently rendering as empty.
@@ -48,7 +50,7 @@ $__navActive = function (string $path): string {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= \App\Core\View::e($title ?? 'Bad Event') ?> – Správa akcí</title>
-    <link rel="stylesheet" href="<?= asset_url('/assets/css/main.css') ?>">
+    <?= \App\Core\View::render('layout/_styles') ?>
     <script src="<?= asset_url('/assets/js/main.js') ?>"></script>
     <script src="<?= asset_url('/assets/js/confirm-delete.js') ?>"></script>
 </head>
@@ -84,6 +86,10 @@ $__navActive = function (string $path): string {
             <li><a href="<?= url('/admin/dictionaries') ?>" class="<?= ltrim($__navActive('/admin/dictionaries')) ?>">Číselníky a místnosti</a></li>
             <?php else: ?>
             <li><span class="nav-link-disabled" title="Nemáte oprávnění: Spravovat číselníky">Číselníky a místnosti</span></li>
+            <?php endif; ?>
+            <?php // Shown only to TechAdmin — deliberately no greyed-out placeholder for anyone else. ?>
+            <?php if ($__isTechAdmin): ?>
+            <li><a href="<?= url('/admin/logs') ?>" class="<?= ltrim($__navActive('/admin/logs')) ?>">Logy</a></li>
             <?php endif; ?>
         </ul>
         <div class="nav-user">

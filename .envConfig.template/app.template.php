@@ -7,8 +7,9 @@ return [
     'base_url' => 'https://badit.cz/TEST/BadEvent',
     'timezone' => 'Europe/Prague',
 
-    // Organization logo shown in the page header and on exports: a path inside public/ (or a full https:// URL).
-    'logo_path' => '/assets/images/logo-min.svg',
+    // Look of the app: folder public/themes/<theme>/ with theme.css (company colors) and logo.svg (header + exports).
+    // 'demo' = bundled showcase theme; a company theme is a copy of it that exists only on its server (gitignored).
+    'theme' => 'demo',
 
     'mail_from' => 'BadEvent@badit.cz',
     'email_from_name' => 'Bad Event Manager',

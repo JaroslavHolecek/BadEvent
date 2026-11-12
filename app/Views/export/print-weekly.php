@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= \App\Core\View::e($title) ?></title>
-    <link rel="stylesheet" href="<?= asset_url('/assets/css/main.css') ?>">
+    <?= \App\Core\View::render('layout/_styles') ?>
     <style>
         @page { size: A4 landscape; margin: 5mm 10mm 10mm; }
         :root { --print-margin: 10mm; }
@@ -20,9 +20,9 @@
         .print-actions { margin-bottom: 1rem; }
         .week-sheet { page-break-after: always; break-after: page; margin-bottom: 12mm; }
         .week-sheet:last-of-type { page-break-after: auto; break-after: auto; }
-        .week-sheet h1 { text-align: center; color: #1e3a52; margin: 0 0 4mm; font-size: 1.6rem; }
+        .week-sheet h1 { text-align: center; color: var(--color-print-accent); margin: 0 0 4mm; font-size: 1.6rem; }
         .week-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: .72rem; }
-        .week-table th, .week-table td { width: calc(100% / 7); border: 1px solid #1e3a52; vertical-align: top; }
+        .week-table th, .week-table td { width: calc(100% / 7); border: 1px solid var(--color-print-accent); vertical-align: top; }
         .week-table thead th {
             background: #fff;
             color: #000;
@@ -38,9 +38,9 @@
         .plan-item { margin-bottom: 3mm; line-height: 1.25; break-inside: avoid; }
         .plan-time { font-weight: 700; color: var(--color-primary); }
         .plan-name { font-weight: 700; }
-        .plan-detail { color: #4b5563; }
-        .plan-empty { margin: 0; color: #6b7280; font-style: italic; }
-        .plan-note { margin-top: 3mm; font-size: .7rem; color: #4b5563; }
+        .plan-detail { color: var(--color-print-text-2); }
+        .plan-empty { margin: 0; color: var(--color-text-muted); font-style: italic; }
+        .plan-note { margin-top: 3mm; font-size: .7rem; color: var(--color-print-text-2); }
         @media print {
             .print-actions { display: none; }
             .print-page { width: auto; min-height: 0; margin: 0; padding: 0; }

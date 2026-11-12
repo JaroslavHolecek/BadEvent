@@ -74,6 +74,7 @@ Nothing in the PHP code itself has to change — every server-specific value liv
   - best: `pg_dump -Fc` on the old server + `pg_restore --no-owner` on the new one;
   - with SQL-only access (Adminer): import the Adminer dump into an **empty** database. Adminer exports `boolean` columns as `0`/`1`, which PostgreSQL refuses — the dump has to be adjusted first (boolean columns created as `integer` and converted back at the end, triggers created after the data, everything in one transaction); see `database/export/` for an already adjusted example.
 - Fresh install instead: run `database/setup.sql`.
+  - Without `psql` (Adminer only): `setup.sql` uses psql's `\i`, which Adminer doesn't understand — import the three files it lists one by one, in this order, via Adminer → *Import* (keep "Stop on error" checked): `vendor/BadLogin/src/db/bl_create.sql`, `database/create.sql`, `database/seed.sql` (optionally then `database/seed_showroom.sql`). To wipe an existing database first, run `DROP SCHEMA public CASCADE; CREATE SCHEMA public;` in *SQL command* — irreversible, back up with *Export* first.
 - Run every script in `database/migrations/` that the source database didn't have yet (all of them are idempotent — safe to run again).
 - The tables must belong to (or be granted to) the DB user from `database.php` — if you import as another user, `GRANT` the app user `SELECT, INSERT, UPDATE, DELETE` on all tables and `USAGE, SELECT` on all sequences.
 

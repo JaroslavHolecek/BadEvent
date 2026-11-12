@@ -270,7 +270,7 @@ final class AdminController extends Controller
         $repo        = new RoleRepository();
 
         $role = $repo->findById($roleId);
-        if ($role !== null && $role['code'] === 'administrator') {
+        if ($role !== null && in_array($role['code'], \App\Services\PermissionService::ADMIN_ROLE_CODES, true)) {
             $this->flashError('Administrátor má vždy všechna oprávnění a nelze mu je odebrat.');
             $this->redirect('/admin/roles?role_id=' . $roleId);
         }

@@ -59,6 +59,19 @@ abstract class Controller
         }
     }
 
+    /** Redirects to the homepage with a flash error unless the user's active role is 'techadmin'. */
+    protected function requireTechAdmin(): void
+    {
+        $this->requireAuth();
+        $userId = Auth::userId();
+
+        $permService = new \App\Services\PermissionService();
+        if ($userId === null || !$permService->isTechAdmin($userId)) {
+            $this->flashError('Nemáte oprávnění k této stránce.');
+            Response::redirect('/');
+        }
+    }
+
     /** Operation codes allowed under the current user's active role, for gating UI elements in views. */
     protected function allowedOps(): array
     {

@@ -11,7 +11,7 @@ use Tests\Support\HttpTestCase;
 /** Which pages each seeded role can open — the role → page matrix as users experience it. */
 final class RoleAccessTest extends HttpTestCase
 {
-    private const ALL = ['administrator', 'organizer', 'substitute', 'stuff', 'viewer', 'place_manager'];
+    private const ALL = ['administrator', 'techadmin', 'organizer', 'substitute', 'stuff', 'viewer', 'place_manager'];
 
     /** page => roles that may open it */
     private const PAGES = [
@@ -20,17 +20,19 @@ final class RoleAccessTest extends HttpTestCase
         '/events'                    => self::ALL,
         '/calendar/places'           => self::ALL,
         '/profile'                   => self::ALL,
-        '/actions/create'            => ['administrator', 'organizer'],
-        '/people'                    => ['administrator', 'organizer'],
-        '/admin/roles'               => ['administrator'],
-        '/admin/dictionaries'        => ['administrator'],
-        '/admin/building-code-duty'  => ['administrator'],
-        '/export'                    => ['administrator'],
-        '/export/print'              => ['administrator'],
-        '/export/statistika/print'   => ['administrator'],
-        '/export/rooms/print'        => ['administrator'],
-        '/export/maintenance/print'  => ['administrator'],
-        '/export/weekly/print'       => ['administrator'],
+        '/actions/create'            => ['administrator', 'techadmin', 'organizer'],
+        '/people'                    => ['administrator', 'techadmin', 'organizer'],
+        '/admin/roles'               => ['administrator', 'techadmin'],
+        '/admin/dictionaries'        => ['administrator', 'techadmin'],
+        '/admin/building-code-duty'  => ['administrator', 'techadmin'],
+        '/export'                    => ['administrator', 'techadmin'],
+        '/export/print'              => ['administrator', 'techadmin'],
+        '/export/statistika/print'   => ['administrator', 'techadmin'],
+        '/export/rooms/print'        => ['administrator', 'techadmin'],
+        '/export/maintenance/print'  => ['administrator', 'techadmin'],
+        '/export/weekly/print'       => ['administrator', 'techadmin'],
+        '/admin/logs'                => ['techadmin'],
+        '/admin/logs/print'          => ['techadmin'],
     ];
 
     public static function roles(): array

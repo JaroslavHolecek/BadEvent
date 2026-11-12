@@ -126,6 +126,22 @@ final class NotificationServiceTest extends DatabaseTestCase
         $this->assertSame([], $this->notificationsOf($uninvolved['id']), 'organizer of other actions');
     }
 
+    /** TechAdmin má práva administrátora, ale upozornění pro administrátory nedostává (administrátor ano). */
+    public function testTechAdminGetsNoAdminReminders(): void
+    {
+        $techAdmin = Fixtures::user('techadmin');
+        Fixtures::action([
+            'public_start_at' => Fixtures::at('+3 days 10:00'),
+            'organizers'      => [$this->organizer['id']],
+        ]);
+
+        (new NotificationService())->sendMissingRoomReminders();
+
+        $this->assertCount(1, $this->notificationsOf($this->admin['id']), 'administrator');
+        $this->assertSame([], $this->notificationsOf($techAdmin['id']), 'techadmin');
+        $this->assertNotContains($techAdmin['id'], (new NotificationService())->adminIds());
+    }
+
     /** Kdo je zároveň zástupcem akce i administrátorem, dostane připomínku jen jednou. */
     public function testRecipientWithSeveralRolesGetsTheReminderOnce(): void
     {

@@ -186,7 +186,7 @@ final class ExportTest extends HttpTestCase
     /**
      * Každý export pro tisk má logo organizace v pravém horním rohu každého listu s nadpisem – jako první prvek
      * nadpisu (plovoucí vpravo, nadpis pokračuje pod ním); u přehledu místností u nadpisu každé místnosti,
-     * u plánu akcí u každého týdne.
+     * u plánu akcí u každého týdne. Logo i CSS jsou z nastaveného motivu (v testech demo).
      */
     public function testEveryPrintExportHasTheLogoInItsHeadings(): void
     {
@@ -208,8 +208,9 @@ final class ExportTest extends HttpTestCase
             $xpath = $page->xpath();
             $this->assertOk($page, $path);
             $this->assertSame($count, $xpath->query('//h1[@class="print-sheet-title"]')->length, $path);
-            $this->assertSame($count, $xpath->query('//h1[@class="print-sheet-title"]/*[1][self::img][@class="print-logo"][contains(@src, "logo-min.svg")]')->length, $path);
+            $this->assertSame($count, $xpath->query('//h1[@class="print-sheet-title"]/*[1][self::img][@class="print-logo"][contains(@src, "/themes/demo/logo.svg")]')->length, $path);
             $this->assertSame($count, $xpath->query('//img[@class="print-logo"]')->length, "{$path}: no other logo");
+            $this->assertSame(1, $xpath->query('//head/link[@rel="stylesheet"][contains(@href, "/themes/demo/theme.css")]')->length, "{$path}: theme CSS");
         }
     }
 

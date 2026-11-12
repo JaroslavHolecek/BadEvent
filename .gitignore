@@ -51,3 +51,8 @@ deploy.sh
 
 # claude files
 .claude/
+
+# ── Themes (public/themes/<name>/: theme.css + logo.svg) ──────
+# only the bundled demo theme is in git; company themes live only on their server (like .envConfig/)
+public/themes/*
+!public/themes/demo/

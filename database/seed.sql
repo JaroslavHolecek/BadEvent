@@ -14,6 +14,7 @@ INSERT INTO action_statuses (name, code) VALUES
 
 INSERT INTO roles (name, code) VALUES
     ('Administrátor', 'administrator'),
+    ('TechAdmin', 'techadmin'),
     ('Organizátor', 'organizer'),
     ('Zástup organizátora', 'substitute'),
     ('Pomocník', 'stuff'),
@@ -86,6 +87,7 @@ INSERT INTO cost_types (name) VALUES
 -- ============================================================
 -- Role → Operations permissions
 -- Administrator: all operations
+-- TechAdmin: all operations (like Administrator), but gets no notification emails; sees /admin/logs
 -- Organizer: create/edit/confirm/complete/cancel actions and events
 -- Substitute: view archive only
 -- Reader: view archive only
@@ -95,7 +97,7 @@ INSERT INTO role_operations (role_id, operation_id)
 SELECT r.id, o.id
 FROM roles r
 CROSS JOIN operations o
-WHERE r.code = 'administrator';
+WHERE r.code IN ('administrator', 'techadmin');
 
 INSERT INTO role_operations (role_id, operation_id)
 SELECT r.id, o.id

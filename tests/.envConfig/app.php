@@ -7,7 +7,9 @@ return [
     'base_url' => 'http://127.0.0.1:' . (getenv('TEST_HTTP_PORT') ?: '8765'), // PHP built-in server started by the HTTP tests
     'timezone' => 'Europe/Prague',
 
-    'logo_path' => '/assets/images/logo-min.svg',
+    // Look of the app: folder public/themes/<theme>/ with theme.css (company colors) and logo.svg (header + exports).
+    // 'demo' = bundled showcase theme; a company theme is a copy of it that exists only on its server (gitignored).
+    'theme' => 'demo',
 
     'mail_from' => 'badevent-test@example.test', // emails never leave the machine: tests/bin/fake-sendmail stores them in tests/tmp/mail/
     'email_from_name' => 'Bad Event Manager (TEST)',

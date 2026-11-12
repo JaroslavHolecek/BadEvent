@@ -24,6 +24,7 @@ final class PermissionServiceTest extends DatabaseTestCase
 
         return [
             'administrator' => ['administrator', $all],
+            'techadmin'     => ['techadmin', $all],
             'organizer'     => ['organizer', [
                 'action.create', 'action.mark_not_agreed', 'action.confirm', 'action.complete',
                 'action.own_action.update_basic', 'action.view_basic', 'action.view_economic',
@@ -54,12 +55,26 @@ final class PermissionServiceTest extends DatabaseTestCase
         $this->assertFalse($perm->can($user['id'], 'nonexistent.operation'));
     }
 
-    /** isAdmin platí jen pro roli administrátor. */
+    /** isAdmin platí jen pro role administrátor a TechAdmin. */
     public function testOnlyAdministratorIsAdmin(): void
     {
         $perm = new PermissionService();
         $this->assertTrue($perm->isAdmin(Fixtures::user('administrator')['id']));
+        $this->assertTrue($perm->isAdmin(Fixtures::user('techadmin')['id']));
         $this->assertFalse($perm->isAdmin(Fixtures::user('organizer')['id']));
+    }
+
+    /** isTechAdmin platí jen pro aktivní roli TechAdmin — ne pro administrátora ani pro TechAdmina přepnutého do jiné role. */
+    public function testOnlyActiveTechAdminIsTechAdmin(): void
+    {
+        $perm = new PermissionService();
+        $this->assertTrue($perm->isTechAdmin(Fixtures::user('techadmin')['id']));
+        $this->assertFalse($perm->isTechAdmin(Fixtures::user('administrator')['id']));
+
+        $user = Fixtures::user(['viewer', 'techadmin']);
+        $this->assertFalse($perm->isTechAdmin($user['id']), 'viewer is the active role');
+        $this->assertTrue($perm->switchRole($user['id'], Fixtures::roleId('techadmin')));
+        $this->assertTrue($perm->isTechAdmin($user['id']));
     }
 
     /** Uživatel bez role nemá aktivní roli ani žádné oprávnění. */

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrace – Bad Event</title>
-    <link rel="stylesheet" href="<?= asset_url('/assets/css/main.css') ?>">
+    <?= \App\Core\View::render('layout/_styles') ?>
 </head>
 <body class="login-page">
 

@@ -124,6 +124,32 @@ final class ActionTest extends HttpTestCase
         $this->assertSame(0, (int) $this->scalar('SELECT COUNT(*) FROM events'), 'nothing half-saved');
     }
 
+    /**
+     * „Přidat akci“ z detailu archivní události (všechny její akce uzavřené/zrušené): tato událost je
+     * v nabídce a předvybraná, akce se do ní uloží; běžný formulář „Nová akce“ ji dál nenabízí.
+     */
+    public function testAddActionFromArchivedEventOffersThatEvent(): void
+    {
+        $this->loginAs('organizer');
+        $archived = Fixtures::event('Stará událost');
+        Fixtures::action(['event_id' => $archived, 'status' => 'closed']);
+        Fixtures::action(['event_id' => $archived, 'status' => 'cancelled']);
+
+        $form = $this->http->get('/actions/create?event_id=' . $archived);
+        $this->assertOk($form);
+        $selected = $form->xpath()->query("//select[@id='event_id']/option[@value='{$archived}'][@selected]");
+        $this->assertSame(1, $selected->length, 'archived event is offered and pre-selected');
+
+        $plain = $this->http->get('/actions/create');
+        $this->assertSame(0, $plain->xpath()->query("//select[@id='event_id']/option[@value='{$archived}']")->length, 'plain create form still hides archived events');
+
+        $invalid = $this->http->post('/actions', $this->createForm(['event_id' => (string) $archived, 'new_event_name' => '', 'name' => ' ']));
+        $this->assertTrue($invalid->isRedirectTo('/actions/create?event_id=' . $archived), 'validation error keeps the event in the URL');
+
+        $id = $this->createdActionId($this->http->post('/actions', $this->createForm(['event_id' => (string) $archived, 'new_event_name' => ''])));
+        $this->assertSame($archived, (int) $this->scalar('SELECT event_id FROM actions WHERE id = ?', [$id]));
+    }
+
     /** Role bez oprávnění „Vytvořit akci“ akci nezaloží ani přímým POSTem. */
     public function testRoleWithoutActionCreateCannotCreate(): void
     {

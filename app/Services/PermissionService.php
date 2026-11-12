@@ -131,10 +131,24 @@ final class PermissionService
         return $stmt->fetchAll();
     }
 
-    /** Returns true when the user's currently active role is 'administrator'. */
+    /**
+     * Role codes that act as administrator everywhere in the app (admin-only pages, status-transition
+     * bypass, "always holds every operation" invariant). 'techadmin' is an administrator that does NOT
+     * receive notification emails — NotificationService::adminIds() deliberately picks only 'administrator'.
+     */
+    public const ADMIN_ROLE_CODES = ['administrator', 'techadmin'];
+
+    /** Returns true when the user's currently active role is an administrator role (administrator or techadmin). */
     public function isAdmin(int $userId): bool
     {
         $role = $this->activeRole($userId);
-        return $role !== null && $role['code'] === 'administrator';
+        return $role !== null && in_array($role['code'], self::ADMIN_ROLE_CODES, true);
+    }
+
+    /** Returns true when the user's currently active role is 'techadmin' (the only role that sees the logs page). */
+    public function isTechAdmin(int $userId): bool
+    {
+        $role = $this->activeRole($userId);
+        return $role !== null && $role['code'] === 'techadmin';
     }
 }

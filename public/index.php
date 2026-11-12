@@ -13,6 +13,7 @@ use App\Controllers\DashboardController;
 use App\Controllers\DictionaryController;
 use App\Controllers\EventController;
 use App\Controllers\ExportController;
+use App\Controllers\LogController;
 use App\Controllers\PersonController;
 use App\Controllers\PlaceController;
 use App\Controllers\UserController;
@@ -117,6 +118,10 @@ $router->get('/calendar/places',  [CalendarController::class, 'places']);
 // Building code duty
 $router->get('/admin/building-code-duty',       [BuildingCodeDutyController::class, 'admin']);
 $router->post('/admin/building-code-duty/save', [BuildingCodeDutyController::class, 'save']);
+
+// Audit logs — TechAdmin only
+$router->get('/admin/logs',       [LogController::class, 'index']);
+$router->get('/admin/logs/print', [LogController::class, 'print']);
 
 // Export
 $router->get('/export',       [ExportController::class, 'index']);

@@ -28,13 +28,56 @@ function asset_url(string $path): string
 }
 
 /**
- * URL of the organization logo — 'logo_path' from .envConfig/app.php: a path inside public/ (gets
- * asset_url()'s cache-buster) or a full http(s) URL used as is. Falls back to the bundled logo.
+ * Visual themes live in public/themes/<name>/ — each holds theme.css (overrides the CSS variables of
+ * main.css: company colors etc.) and logo.svg. 'demo' is the bundled showcase theme (in git, used by
+ * tests); a company's own theme folder exists only on its server (gitignored, like .envConfig/).
  */
+const DEFAULT_THEME = 'demo';
+
+/**
+ * Active theme: 'theme' from .envConfig/app.php. An unsafe name (anything but letters, digits, '-', '_')
+ * or a folder that doesn't exist falls back to the demo theme, so a config typo never breaks the look.
+ * $config / $publicDir are for tests only.
+ */
+function theme_name(?array $config = null, ?string $publicDir = null): string
+{
+    $config    ??= \App\Core\Config::load('app');
+    $publicDir ??= __DIR__ . '/../../public';
+    $name = (string) ($config['theme'] ?? DEFAULT_THEME);
+    if (preg_match('/^[A-Za-z0-9_-]+$/', $name) !== 1 || !is_dir($publicDir . '/themes/' . $name)) {
+        return DEFAULT_THEME;
+    }
+    return $name;
+}
+
+/**
+ * Public path ('/themes/<name>/<file>') of a file of the active theme; a file the theme doesn't have is
+ * taken from the demo theme instead (so a company theme may hold only what it changes). Null when
+ * neither has it.
+ */
+function theme_file(string $file, ?array $config = null, ?string $publicDir = null): ?string
+{
+    $publicDir ??= __DIR__ . '/../../public';
+    foreach (array_unique([theme_name($config, $publicDir), DEFAULT_THEME]) as $theme) {
+        $path = '/themes/' . $theme . '/' . $file;
+        if (is_file($publicDir . $path)) {
+            return $path;
+        }
+    }
+    return null;
+}
+
+/** URL (with cache-buster) of the active theme's stylesheet, or null when there is none. */
+function theme_css_url(): ?string
+{
+    $path = theme_file('theme.css');
+    return $path === null ? null : asset_url($path);
+}
+
+/** URL (with cache-buster) of the organization logo — logo.svg of the active theme (header + exports). */
 function logo_url(): string
 {
-    $path = (string) (\App\Core\Config::load('app')['logo_path'] ?? '/assets/images/logo-min.svg');
-    return preg_match('#^https?://#', $path) === 1 ? $path : asset_url('/' . ltrim($path, '/'));
+    return asset_url(theme_file('logo.svg') ?? '/themes/' . DEFAULT_THEME . '/logo.svg');
 }
 
 /** Returns the current request path (without APP_BASE), for building "return here" redirects. */

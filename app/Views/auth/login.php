@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Přihlášení – Správa akcí</title>
-    <link rel="stylesheet" href="<?= asset_url('/assets/css/main.css') ?>">
+    <?= \App\Core\View::render('layout/_styles') ?>
 </head>
 <body class="login-page">
 
 <div class="login-container">
-    <h1 class="login-title">Správa akcí SVKKL</h1>
+    <h1 class="login-title">Správa akcí - Ukázková</h1>
 
     <?php if (!empty($flash['error'])): ?>
         <div class="alert alert-error"><?= \App\Core\View::e($flash['error']) ?></div>

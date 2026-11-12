@@ -88,7 +88,16 @@ $placeFilterWarning = 'POZOR - nevidíte všechny akce, ale pouze ty ve zvolený
             <tr>
                 <?php foreach ($week as $i => $cell): ?>
                 <td class="cal-cell<?= $cell['otherMonth'] ? ' other-month' : '' ?><?= $cell['isToday'] ? ' today' : '' ?><?= $i >= 5 ? ' weekend' : '' ?>">
-                    <span class="cal-day"><?= $cell['day'] ?></span>
+                    <div class="cal-day-row">
+                        <span class="cal-day"><?= $cell['day'] ?></span>
+                        <?php // One small dot (status color) per action that began on an earlier day and is still running. ?>
+                        <?php foreach ($cell['continuing'] ?? [] as $a): ?>
+                        <a href="<?= url('/actions/' . (int) $a['id']) ?>"
+                           class="cal-continuing status-<?= \App\Core\View::e($a['status_code']) ?>"
+                           title="Pokračuje: <?= \App\Core\View::e($a['name']) ?>"
+                           aria-label="Pokračuje: <?= \App\Core\View::e($a['name']) ?>"></a>
+                        <?php endforeach; ?>
+                    </div>
                     <?php foreach ($cell['actions'] as $a): ?>
                     <a href="<?= url('/actions/' . (int) $a['id']) ?>" class="cal-event status-<?= \App\Core\View::e($a['status_code']) ?>">
                         <?= \App\Core\View::e($a['name']) ?>

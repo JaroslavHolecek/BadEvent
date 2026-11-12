@@ -21,6 +21,46 @@
     --color-cancelled:   #dc2626;
     --color-not-agreed:  #9ca3af;
     --color-queue-first: #f59a3c;
+
+    /* Hover shades of the colored buttons */
+    --color-success-h:   #15803d;
+    --color-warning-h:   #b45309;
+    --color-danger-h:    #b91c1c;
+    --color-btn-hover:   #e5e7eb;   /* plain (grey) button */
+    --color-on-accent:   #ffffff;   /* text on colored backgrounds (buttons, badges, calendar events) */
+
+    /* Alerts and highlights */
+    --color-error-bg:      #fef2f2;
+    --color-error-text:    #991b1b;
+    --color-error-border:  #fecaca;
+    --color-success-bg:    #f0fdf4;
+    --color-success-text:  #15803d;
+    --color-success-border:#bbf7d0;
+    --color-warning-bg:    #fffbeb;
+    --color-warning-text:  #92400e;
+    --color-warning-border:#fde68a;
+    --color-changed-border:#fcd34d;  /* "changed since you opened it" banner */
+    --color-row-hover:     #f9fafb;
+    --color-today-bg:      #eff6ff;  /* today's row in tables */
+
+    /* Calendars */
+    --color-cal-muted-bg:  #fafafa;  /* other-month / weekend cells of the actions calendar */
+    --color-day-weekend:   #e2e8f0;  /* room calendar columns */
+    --color-day-today:     #bfdbfe;
+    --color-day-occupied:  #f0fdf4;
+
+    /* Menu: each item is tinted with one of these four colors in turn (strength set below in .nav-links) */
+    --color-nav-1:       #cc0066;
+    --color-nav-2:       #66cccc;
+    --color-nav-3:       #ffcc33;
+    --color-nav-4:       #d0d0cf;
+
+    /* Print exports (export/print-*.php, admin/logs-print.php) */
+    --color-print-accent:    #1e3a52;  /* headings + table lines of the weekly plan and logs */
+    --color-print-border:    #333333;  /* table lines of the other exports */
+    --color-print-header-bg: #f2f2f2;  /* table header row */
+    --color-print-text-2:    #4b5563;  /* secondary text */
+
     --radius:            6px;
     --shadow:            0 1px 3px rgba(0,0,0,.1);
 }
@@ -112,29 +152,29 @@ a:hover { text-decoration: underline; }
 }
 
 /*
- * Subtle library-brand tint per menu item, cycling through the 4 library colors. Hovering a link
+ * Subtle brand tint per menu item, cycling through the 4 theme colors --color-nav-1…4. Hovering a link
  * darkens that same color a bit; the link matching the current page (.active, set server-side in
  * layout/base.php) stays darker still, so the active item reads as more pronounced than a hover.
  */
 .nav-links li:nth-child(4n+1) > a,
-.nav-links li:nth-child(4n+1) > .nav-link-disabled { background-color: rgba(204, 0, 102, 0.12); }
-.nav-links li:nth-child(4n+1) > a:hover { background-color: rgba(204, 0, 102, 0.32); }
-.nav-links li:nth-child(4n+1) > a.active { background-color: rgba(204, 0, 102, 0.55); }
+.nav-links li:nth-child(4n+1) > .nav-link-disabled { background-color: color-mix(in srgb, var(--color-nav-1) 12%, transparent); }
+.nav-links li:nth-child(4n+1) > a:hover { background-color: color-mix(in srgb, var(--color-nav-1) 32%, transparent); }
+.nav-links li:nth-child(4n+1) > a.active { background-color: color-mix(in srgb, var(--color-nav-1) 55%, transparent); }
 
 .nav-links li:nth-child(4n+2) > a,
-.nav-links li:nth-child(4n+2) > .nav-link-disabled { background-color: rgba(102, 204, 204, 0.18); }
-.nav-links li:nth-child(4n+2) > a:hover { background-color: rgba(102, 204, 204, 0.42); }
-.nav-links li:nth-child(4n+2) > a.active { background-color: rgba(102, 204, 204, 0.65); }
+.nav-links li:nth-child(4n+2) > .nav-link-disabled { background-color: color-mix(in srgb, var(--color-nav-2) 18%, transparent); }
+.nav-links li:nth-child(4n+2) > a:hover { background-color: color-mix(in srgb, var(--color-nav-2) 42%, transparent); }
+.nav-links li:nth-child(4n+2) > a.active { background-color: color-mix(in srgb, var(--color-nav-2) 65%, transparent); }
 
 .nav-links li:nth-child(4n+3) > a,
-.nav-links li:nth-child(4n+3) > .nav-link-disabled { background-color: rgba(255, 204, 51, 0.18); }
-.nav-links li:nth-child(4n+3) > a:hover { background-color: rgba(255, 204, 51, 0.42); }
-.nav-links li:nth-child(4n+3) > a.active { background-color: rgba(255, 204, 51, 0.65); }
+.nav-links li:nth-child(4n+3) > .nav-link-disabled { background-color: color-mix(in srgb, var(--color-nav-3) 18%, transparent); }
+.nav-links li:nth-child(4n+3) > a:hover { background-color: color-mix(in srgb, var(--color-nav-3) 42%, transparent); }
+.nav-links li:nth-child(4n+3) > a.active { background-color: color-mix(in srgb, var(--color-nav-3) 65%, transparent); }
 
 .nav-links li:nth-child(4n) > a,
-.nav-links li:nth-child(4n) > .nav-link-disabled { background-color: rgba(208, 208, 207, 0.35); }
-.nav-links li:nth-child(4n) > a:hover { background-color: rgba(208, 208, 207, 0.60); }
-.nav-links li:nth-child(4n) > a.active { background-color: rgba(208, 208, 207, 0.85); }
+.nav-links li:nth-child(4n) > .nav-link-disabled { background-color: color-mix(in srgb, var(--color-nav-4) 35%, transparent); }
+.nav-links li:nth-child(4n) > a:hover { background-color: color-mix(in srgb, var(--color-nav-4) 60%, transparent); }
+.nav-links li:nth-child(4n) > a.active { background-color: color-mix(in srgb, var(--color-nav-4) 85%, transparent); }
 
 .nav-user {
     display: flex;
@@ -276,19 +316,19 @@ a:hover { text-decoration: underline; }
     color: var(--color-text);
 }
 
-.btn:hover { background: #e5e7eb; text-decoration: none; }
+.btn:hover { background: var(--color-btn-hover); text-decoration: none; }
 
-.btn-primary { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+.btn-primary { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-accent); }
 .btn-primary:hover { background: var(--color-primary-h); border-color: var(--color-primary-h); }
 
-.btn-success { background: var(--color-success); border-color: var(--color-success); color: #fff; }
-.btn-success:hover { background: #15803d; border-color: #15803d; }
+.btn-success { background: var(--color-success); border-color: var(--color-success); color: var(--color-on-accent); }
+.btn-success:hover { background: var(--color-success-h); border-color: var(--color-success-h); }
 
-.btn-warning { background: var(--color-warning); border-color: var(--color-warning); color: #fff; }
-.btn-warning:hover { background: #b45309; }
+.btn-warning { background: var(--color-warning); border-color: var(--color-warning); color: var(--color-on-accent); }
+.btn-warning:hover { background: var(--color-warning-h); border-color: var(--color-warning-h); }
 
-.btn-danger  { background: var(--color-danger);  border-color: var(--color-danger);  color: #fff; }
-.btn-danger:hover  { background: #b91c1c; }
+.btn-danger  { background: var(--color-danger);  border-color: var(--color-danger);  color: var(--color-on-accent); }
+.btn-danger:hover  { background: var(--color-danger-h); border-color: var(--color-danger-h); }
 
 .btn-ghost  { background: transparent; border-color: var(--color-border); }
 .btn-ghost:hover { background: var(--color-bg); }
@@ -320,9 +360,9 @@ button.btn-disabled:hover {
     border: 1px solid transparent;
 }
 
-.alert-error   { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
-.alert-success { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
-.alert-warning { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+.alert-error   { background: var(--color-error-bg); color: var(--color-error-text); border-color: var(--color-error-border); }
+.alert-success { background: var(--color-success-bg); color: var(--color-success-text); border-color: var(--color-success-border); }
+.alert-warning { background: var(--color-warning-bg); color: var(--color-warning-text); border-color: var(--color-warning-border); }
 
 /* Shown above the action calendar/list while "Zobrazit pouze moje akce" is active. */
 .only-mine-warning {
@@ -338,7 +378,7 @@ button.btn-disabled:hover {
 /* ============================================================
    Building code duty
    ============================================================ */
-.today-row { background: #eff6ff; font-weight: 600; }
+.today-row { background: var(--color-today-bg); font-weight: 600; }
 
 .duty-banner {
     display: flex;
@@ -414,7 +454,7 @@ button.btn-disabled:hover {
     border-radius: 999px;
     font-size: .78rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--color-on-accent);
 }
 
 .status-draft      { background: var(--color-draft); }
@@ -448,7 +488,7 @@ button.btn-disabled:hover {
     background: var(--color-bg);
 }
 
-.table tbody tr:hover { background: #f9fafb; }
+.table tbody tr:hover { background: var(--color-row-hover); }
 
 .sortable-col {
     cursor: pointer;
@@ -536,7 +576,7 @@ button.btn-disabled:hover {
 .form-group textarea:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 15%, transparent);
 }
 
 .form-group textarea { resize: vertical; }
@@ -689,7 +729,7 @@ button.btn-disabled:hover {
 .place-state-option input:checked + span {
     background: var(--color-primary);
     border-color: var(--color-primary);
-    color: #fff;
+    color: var(--color-on-accent);
 }
 
 .finance-rows {
@@ -725,12 +765,12 @@ button.btn-disabled:hover {
 }
 
 .changed-banner {
-    background: #fffbeb;
-    border: 1px solid #fcd34d;
+    background: var(--color-warning-bg);
+    border: 1px solid var(--color-changed-border);
     border-radius: var(--radius);
     padding: .5rem .75rem;
     font-size: .85rem;
-    color: #92400e;
+    color: var(--color-warning-text);
     margin-bottom: .75rem;
 }
 
@@ -739,7 +779,7 @@ button.btn-disabled:hover {
 .field-changed select,
 .field-changed textarea {
     border-color: var(--color-warning);
-    background: #fffbeb;
+    background: var(--color-warning-bg);
 }
 
 /* Exports: organization logo in the top right corner of every heading's sheet (export/_logo, inside
@@ -764,12 +804,12 @@ input.field-error,
 select.field-error,
 textarea.field-error {
     border-color: var(--color-danger);
-    background: color-mix(in srgb, var(--color-danger) 12%, #fff);
+    background: color-mix(in srgb, var(--color-danger) 12%, var(--color-surface));
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-danger) 30%, transparent);
 }
 .has-error > label { color: var(--color-danger); }
 .section-error {
-    background: color-mix(in srgb, var(--color-danger) 10%, #fff);
+    background: color-mix(in srgb, var(--color-danger) 10%, var(--color-surface));
     outline: 2px solid var(--color-danger);
     outline-offset: 2px;
     border-radius: var(--radius);
@@ -822,7 +862,7 @@ textarea.field-error {
     transition: background .15s, color .15s;
 }
 
-.tab-btn.active { background: var(--color-primary); color: #fff; }
+.tab-btn.active { background: var(--color-primary); color: var(--color-on-accent); }
 
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
@@ -854,7 +894,7 @@ textarea.field-error {
     align-items: center;
     justify-content: center;
     background: var(--color-danger);
-    color: #fff;
+    color: var(--color-on-accent);
     border-radius: 999px;
     font-size: .75rem;
     font-weight: 700;
@@ -957,10 +997,36 @@ textarea.field-error {
     margin-bottom: .2rem;
 }
 
-.cal-cell.other-month { background: #fafafa; color: var(--color-text-muted); }
+/* Day number + "continuing" dots on one line: the line is as tall as the day number, dots never wrap,
+   so they don't make the cell taller (with too many for the width, the extra ones are cut off). */
+.cal-day-row {
+    display: flex;
+    align-items: center;
+    gap: .2rem;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    margin-bottom: .2rem;
+}
+.cal-day-row .cal-day { margin-bottom: 0; flex-shrink: 0; }
+.cal-continuing {
+    flex-shrink: 0;
+    width: .6rem;
+    height: .6rem;
+    border-radius: 50%;
+    background: var(--color-text-muted);
+}
+.cal-continuing:hover { opacity: .65; }
+.cal-continuing.status-draft      { background: var(--color-draft); }
+.cal-continuing.status-confirmed  { background: var(--color-confirmed); }
+.cal-continuing.status-completed  { background: var(--color-completed); }
+.cal-continuing.status-closed     { background: var(--color-closed); }
+.cal-continuing.status-cancelled  { background: var(--color-cancelled); }
+.cal-continuing.status-not_agreed { background: var(--color-not-agreed); }
+
+.cal-cell.other-month { background: var(--color-cal-muted-bg); color: var(--color-text-muted); }
 .cal-cell.today .cal-day {
     background: var(--color-primary);
-    color: #fff;
+    color: var(--color-on-accent);
     border-radius: 50%;
     width: 1.6rem;
     height: 1.6rem;
@@ -968,14 +1034,14 @@ textarea.field-error {
     align-items: center;
     justify-content: center;
 }
-.cal-cell.weekend { background: #fafafa; }
+.cal-cell.weekend { background: var(--color-cal-muted-bg); }
 
 .cal-event {
     display: block;
     padding: .15rem .35rem;
     margin-bottom: .15rem;
     border-radius: 3px;
-    color: #fff;
+    color: var(--color-on-accent);
     font-size: .72rem;
     white-space: nowrap;
     overflow: hidden;
@@ -1031,15 +1097,15 @@ textarea.field-error {
 }
 
 .day-col { min-width: 32px; }
-.day-col.weekend { background: #e2e8f0; }
-.day-col.today { background: #bfdbfe; font-weight: 700; }
-.day-col.occupied { background: #f0fdf4; }
+.day-col.weekend { background: var(--color-day-weekend); }
+.day-col.today { background: var(--color-day-today); font-weight: 700; }
+.day-col.occupied { background: var(--color-day-occupied); }
 
 .place-event {
     display: block;
     padding: .1rem .2rem;
     border-radius: 2px;
-    color: #fff;
+    color: var(--color-on-accent);
     font-size: .7rem;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1051,7 +1117,7 @@ textarea.field-error {
 .place-event.status-completed { background: var(--color-completed); }
 
 .place-event-queued {
-    background: rgba(217, 119, 6, .25) !important;
+    background: color-mix(in srgb, var(--color-warning) 25%, transparent) !important;
     border: 1px dashed var(--color-warning);
     color: var(--color-text) !important;
 }
@@ -1172,8 +1238,8 @@ textarea.field-error {
     background: transparent;
     border: 1px dashed var(--color-warning);
 }
-.day-timeline-bar-public.queued { background: rgba(217, 119, 6, .25); }
-.day-timeline-bar-staff.queued  { background: rgba(217, 119, 6, .5); border: none; }
+.day-timeline-bar-public.queued { background: color-mix(in srgb, var(--color-warning) 25%, transparent); }
+.day-timeline-bar-staff.queued  { background: color-mix(in srgb, var(--color-warning) 50%, transparent); border: none; }
 
 /* Squared-off edge = the action actually continues past this side of the grid (into the
    previous/next day), instead of really starting/ending right at the grid's boundary. */
@@ -1193,7 +1259,7 @@ textarea.field-error {
 .day-timeline-confirmed-badge {
     font-size: .7rem;
     font-weight: 700;
-    color: #fff;
+    color: var(--color-on-accent);
     background: var(--color-confirmed);
     border-radius: 999px;
     width: 1.1rem;
@@ -1238,7 +1304,7 @@ textarea.field-error {
     border-radius: var(--radius);
     font-size: .78rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--color-on-accent);
 }
 .perm-granted { background: var(--color-success); }
 .perm-revoked { background: var(--color-text-muted); }
@@ -1309,3 +1375,10 @@ h3 { font-size: .95rem; margin: .75rem 0 .4rem; }
 /* :root {
     --color-bg: #ff6d6d;
 } */
+
+/* Audit-log page (TechAdmin) — admin/logs.php */
+.log-table td { vertical-align: top; font-size: .85rem; }
+.log-table .log-time { white-space: nowrap; }
+.log-table .log-num { text-align: right; }
+.log-table .log-data { font-family: monospace; font-size: .75rem; overflow-wrap: anywhere; max-width: 40rem; }
+.log-table .log-empty { font-style: italic; color: var(--color-text-muted); }

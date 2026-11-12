@@ -251,7 +251,9 @@ final class ActionController extends Controller
         View::renderWithLayout('actions/form', [
             'title'              => 'Nová akce',
             'isEdit'             => false,
-            'events'             => $events->listAvailableForAssignment(),
+            // Pre-selected event is always offered, even when it is already "archived"
+            // (all its actions terminal) and would otherwise be filtered out.
+            'events'             => $events->listAvailableForAssignment($preselectedEventId ?: null),
             'places'             => $placesList,
             'roomStates'         => $this->defaultRoomStates($placesList),
             'actionTypes'        => $dictionary->listActive('action_types'),
@@ -297,7 +299,10 @@ final class ActionController extends Controller
         }
 
         if (!empty($errors)) {
-            $this->failForm(implode('; ', $errors), '/actions/create', array_keys($errors));
+            // Keep the chosen event in the URL so an archived event stays in the select after redirect.
+            $postedEventId = (int) ($data['event_id'] ?? 0);
+            $back = '/actions/create' . ($postedEventId > 0 ? '?event_id=' . $postedEventId : '');
+            $this->failForm(implode('; ', $errors), $back, array_keys($errors));
         }
 
         $repo     = new ActionRepository();

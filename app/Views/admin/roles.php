@@ -84,7 +84,7 @@
                             </span>
                         </td>
                         <td>
-                            <?php if ($selectedRole['code'] === 'administrator'): ?>
+                            <?php if (in_array($selectedRole['code'], \App\Services\PermissionService::ADMIN_ROLE_CODES, true)): ?>
                                 <span class="perm-denied" title="Administrátor má vždy všechna oprávnění.">–</span>
                             <?php elseif ($op['granted']): ?>
                             <form method="POST" action="<?= url('/admin/roles/' . (int) $selectedRole['id'] . '/revoke/' . (int) $op['id']) ?>">

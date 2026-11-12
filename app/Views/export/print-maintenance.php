@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= \App\Core\View::e($title) ?></title>
-    <link rel="stylesheet" href="<?= asset_url('/assets/css/main.css') ?>">
+    <?= \App\Core\View::render('layout/_styles') ?>
     <style>
         @page { size: A4; margin: 7.5mm 15mm 15mm; }
         :root { --print-margin: 15mm; }
@@ -22,18 +22,18 @@
         .print-filter-summary p { margin: .2rem 0; }
         .print-table { width: 100%; border-collapse: collapse; font-size: .78rem; table-layout: fixed; }
         .print-table th, .print-table td {
-            border: 1px solid #333;
+            border: 1px solid var(--color-print-border);
             padding: .3rem .4rem;
             text-align: left;
             vertical-align: top;
             overflow-wrap: break-word;
         }
-        .print-table th { background: #f2f2f2; }
+        .print-table th { background: var(--color-print-header-bg); }
         .print-table col.col-organizers { width: 18ch; }
         .print-table col.col-places { width: 18%; }
         .maintenance-room { margin-bottom: .4rem; }
         .maintenance-room:last-child { margin-bottom: 0; }
-        .maintenance-room .hint { font-size: .72rem; color: #555; }
+        .maintenance-room .hint { font-size: .72rem; color: var(--color-print-text-2); }
         @media print {
             .print-actions { display: none; }
             .print-page { width: auto; min-height: 0; margin: 0; padding: 0; }
