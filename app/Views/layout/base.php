@@ -49,7 +49,7 @@ $__navActive = function (string $path): string {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= \App\Core\View::e($title ?? 'Bad Event') ?> – Správa akcí</title>
+    <title><?= \App\Core\View::e(isset($title) && $title !== '' ? $title . ' – ' . app_name() : app_name()) ?></title>
     <?= \App\Core\View::render('layout/_styles') ?>
     <script src="<?= asset_url('/assets/js/main.js') ?>"></script>
     <script src="<?= asset_url('/assets/js/confirm-delete.js') ?>"></script>

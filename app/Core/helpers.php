@@ -80,6 +80,16 @@ function logo_url(): string
     return asset_url(theme_file('logo.svg') ?? '/themes/' . DEFAULT_THEME . '/logo.svg');
 }
 
+/**
+ * Application name: 'app_name' from .envConfig/app.php — page titles, login/registration heading.
+ * 'Bad Event' (the product name, also in the footer) when unset.
+ */
+function app_name(): string
+{
+    $name = trim((string) (\App\Core\Config::load('app')['app_name'] ?? ''));
+    return $name !== '' ? $name : 'Bad Event';
+}
+
 /** Returns the current request path (without APP_BASE), for building "return here" redirects. */
 function currentPath(): string
 {

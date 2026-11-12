@@ -8,14 +8,14 @@
     <style>
         @page { size: A4 landscape; margin: 5mm 10mm 10mm; }
         :root { --print-margin: 10mm; }
-        body { background: #fff; }
+        body { background: var(--color-print-bg); }
         .print-page {
             width: 297mm;
             min-height: 210mm;
             margin: 0 auto;
             padding: 5mm 10mm 10mm;
             box-sizing: border-box;
-            background: #fff;
+            background: var(--color-print-bg);
         }
         .print-actions { margin-bottom: 1rem; }
         .week-sheet { page-break-after: always; break-after: page; margin-bottom: 12mm; }
@@ -24,8 +24,8 @@
         .week-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: .72rem; }
         .week-table th, .week-table td { width: calc(100% / 7); border: 1px solid var(--color-print-accent); vertical-align: top; }
         .week-table thead th {
-            background: #fff;
-            color: #000;
+            background: var(--color-print-bg);
+            color: var(--color-print-text);
             text-align: center;
             padding: 2mm 1mm;
             text-transform: uppercase;

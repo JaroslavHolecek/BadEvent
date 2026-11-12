@@ -1,5 +1,8 @@
 /* ============================================================
    Motiv „demo“ — ukázkový vzhled aplikace (testy, ukázka). Je v gitu.
+   Barvy vychází ze značky BadIt (badit-brand.json): cihlová, šedomodrá, zelená,
+   křídová bílá a asfalt; ostatní barvy aplikace jsou dopočtené ve stejném
+   pastelovém „křídovém“ stylu.
 
    Vlastní motiv firmy:
      1. Zkopírujte tuto složku: public/themes/demo/ → public/themes/<nazev>/
@@ -7,32 +10,84 @@
      2. V theme.css upravte barvy, logo.svg nahraďte firemním logem.
      3. V .envConfig/app.php nastavte 'theme' => '<nazev>'.
    Firemní složky jsou v .gitignore — existují jen na serveru (jako .envConfig/).
-   Co v motivu chybí (soubor nebo proměnná), se vezme z demo / z main.css.
+   Chybí-li motivu soubor, vezme se z demo; chybí-li v theme.css proměnná, platí hodnota
+   z main.css (theme.css z demo se pak NEnačítá). :root v main.css je kompletní seznam
+   všech barev aplikace (včetně tiskových exportů) a zde je uveden celý, aby šel
+   zkopírovat a přepsat.
 
    theme.css se načítá po main.css, takže zde lze přepsat libovolnou proměnnou z :root
-   v main.css (níže jsou ty, které tvoří „firemní“ vzhled) i jakékoliv jiné pravidlo.
+   v main.css i jakékoliv jiné pravidlo.
    ============================================================ */
 :root {
     /* Hlavní barva: tlačítka, odkazy, aktivní záložky, dnešní den v kalendáři */
-    --color-primary:   #2563eb;
-    --color-primary-h: #1d4ed8;   /* tatáž barva při najetí myší (o něco tmavší) */
+    --color-primary:   #b85c4a;   /* BadIt brickDeep */
+    --color-primary-h: #9e4b3b;   /* tatáž barva při najetí myší (o něco tmavší) */
 
     /* Pozadí, plochy, text */
-    --color-bg:         #f5f5f7;
-    --color-surface:    #ffffff;
-    --color-border:     #d1d5db;
-    --color-text:       #1f2937;
-    --color-text-muted: #6b7280;
+    --color-bg:         #f4f0e6;  /* BadIt chalk */
+    --color-surface:    #ffffff;  /* BadIt asphaltLight */
+    --color-border:     #d9d2c3;
+    --color-text:       #3c4146;  /* BadIt asphalt */
+    --color-text-muted: #66707a;
+
+    /* Stavové barvy (tlačítka, štítky stavů akcí, události v kalendáři) */
+    --color-success:     #4e9a58;
+    --color-warning:     #c98a2e;
+    --color-danger:      #b8434f;
+    --color-draft:       #8e7cc3;
+    --color-confirmed:   #4e9a58;
+    --color-completed:   #6f879e;  /* BadIt slateDeep */
+    --color-closed:      #3c4146;  /* BadIt asphalt */
+    --color-cancelled:   #b8434f;
+    --color-not-agreed:  #a9a397;
+    --color-queue-first: #e0a060;
+
+    /* Barvy tlačítek při najetí myší */
+    --color-success-h:   #3f8048;
+    --color-warning-h:   #a9721f;
+    --color-danger-h:    #98353f;
+    --color-btn-hover:   #e8e2d4;   /* obyčejné (šedé) tlačítko */
+    --color-on-accent:   #ffffff;   /* text na barevném pozadí (tlačítka, štítky, události v kalendáři) */
+
+    /* Hlášky a zvýraznění */
+    --color-error-bg:      #fbedea;
+    --color-error-text:    #8a3a2e;
+    --color-error-border:  #f0c9c0;
+    --color-success-bg:    #eef6ec;
+    --color-success-text:  #3f7a47;
+    --color-success-border:#c5e3c8;
+    --color-warning-bg:    #fbf4e4;
+    --color-warning-text:  #8a5a1a;
+    --color-warning-border:#eed9a8;
+    --color-changed-border:#e6c36a;  /* upozornění „změněno od otevření“ */
+    --color-row-hover:     #faf8f2;
+    --color-today-bg:      #eaf0f5;  /* dnešní řádek v tabulkách */
+
+    /* Kalendáře */
+    --color-cal-muted-bg:  #f8f5ee;  /* dny jiného měsíce / víkendy v kalendáři akcí */
+    --color-day-weekend:   #e4e9ee;  /* sloupce kalendáře místností */
+    --color-day-today:     #c9d6e2;
+    --color-day-occupied:  #eef6ec;
 
     /* Menu: položky se postupně podbarvují těmito čtyřmi barvami */
-    --color-nav-1: #cc0066;
-    --color-nav-2: #66cccc;
-    --color-nav-3: #ffcc33;
-    --color-nav-4: #d0d0cf;
+    --color-nav-1: #d4735f;  /* BadIt brick */
+    --color-nav-2: #93aac0;  /* BadIt slate */
+    --color-nav-3: #5db067;  /* BadIt green */
+    --color-nav-4: #c9c2b2;  /* tmavší křída */
 
-    /* Exporty pro tisk */
-    --color-print-accent:    #1e3a52;  /* nadpisy a čáry tabulek plánu akcí a logů */
-    --color-print-border:    #333333;  /* čáry tabulek ostatních exportů */
-    --color-print-header-bg: #f2f2f2;  /* záhlaví tabulek */
-    --color-print-text-2:    #4b5563;  /* vedlejší text */
+    /* Exporty pro tisk (varianta „print“: bílé pozadí, tmavé linky) */
+    --color-print-accent:    #3c4146;  /* nadpisy a čáry tabulek plánu akcí a logů */
+    --color-print-border:    #3c4146;  /* čáry tabulek ostatních exportů */
+    --color-print-header-bg: #f4f0e6;  /* záhlaví tabulek */
+    --color-print-text-2:    #6f879e;  /* vedlejší text */
+    --color-print-bg:        #ffffff;  /* papír */
+    --color-print-text:      #3c4146;  /* text záhlaví plánu akcí */
+
+    /* Stíny a překryvy (asfaltový nádech místo čisté černé) */
+    --color-shadow-card:     rgba(60, 65, 70, .10);  /* přihlašovací okno */
+    --color-shadow-modal:    rgba(60, 65, 70, .28);  /* potvrzovací dialog */
+    --color-overlay:         rgba(60, 65, 70, .55);  /* ztmavení pod dialogem */
+    --color-timeline-tick:   rgba(60, 65, 70, .08);  /* 15min čáry časové osy dne */
+
+    --shadow: 0 1px 3px rgba(60, 65, 70, .12);
 }

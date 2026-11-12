@@ -13,14 +13,14 @@ $__period  = ($dateFrom === null && $dateTo === null)
     <?= \App\Core\View::render('layout/_styles') ?>
     <style>
         @page { size: A4 portrait; margin: 10mm; }
-        body { background: #fff; }
+        body { background: var(--color-print-bg); }
         .print-page {
             width: 210mm;
             min-height: 297mm;
             margin: 0 auto;
             padding: 10mm;
             box-sizing: border-box;
-            background: #fff;
+            background: var(--color-print-bg);
         }
         .print-actions { margin-bottom: 1rem; }
         .print-page h1 { color: var(--color-print-accent); margin: 0 0 2mm; font-size: 1.4rem; }

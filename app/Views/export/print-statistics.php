@@ -8,14 +8,14 @@
     <style>
         @page { size: A4; margin: 7.5mm 15mm 15mm; }
         :root { --print-margin: 15mm; }
-        body { background: #fff; }
+        body { background: var(--color-print-bg); }
         .print-page {
             width: 210mm;
             min-height: 297mm;
             margin: 0 auto;
             padding: 7.5mm 15mm 15mm;
             box-sizing: border-box;
-            background: #fff;
+            background: var(--color-print-bg);
         }
         .print-actions { margin-bottom: 1rem; }
         .print-filter-summary { margin-bottom: 1.5rem; font-size: .9rem; }

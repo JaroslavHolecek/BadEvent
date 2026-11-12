@@ -4,65 +4,79 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-    --color-bg:          #f5f5f7;
-    --color-surface:     #ffffff;
-    --color-border:      #d1d5db;
-    --color-text:        #1f2937;
-    --color-text-muted:  #6b7280;
-    --color-primary:     #2563eb;
-    --color-primary-h:   #1d4ed8;
-    --color-success:     #16a34a;
-    --color-warning:     #d97706;
-    --color-danger:      #dc2626;
-    --color-draft:       #7c3aed;
-    --color-confirmed:   #16a34a;
-    --color-completed:   #0284c7;
-    --color-closed:      #374151;
-    --color-cancelled:   #dc2626;
-    --color-not-agreed:  #9ca3af;
-    --color-queue-first: #f59a3c;
+    /* Default look = BadIt brand (chalk on asphalt, light variant): brick, slate, green, chalk white, asphalt.
+       Other colors are derived in the same soft pastel "chalk" style. */
+    --color-bg:          #f4f0e6;   /* BadIt chalk */
+    --color-surface:     #ffffff;   /* BadIt asphaltLight */
+    --color-border:      #d9d2c3;
+    --color-text:        #3c4146;   /* BadIt asphalt */
+    --color-text-muted:  #66707a;
+    --color-primary:     #b85c4a;   /* BadIt brickDeep */
+    --color-primary-h:   #9e4b3b;
+    --color-success:     #4e9a58;
+    --color-warning:     #c98a2e;
+    --color-danger:      #b8434f;
+    --color-draft:       #8e7cc3;
+    --color-confirmed:   #4e9a58;
+    --color-completed:   #6f879e;   /* BadIt slateDeep */
+    --color-closed:      #3c4146;   /* BadIt asphalt */
+    --color-cancelled:   #b8434f;
+    --color-not-agreed:  #a9a397;
+    --color-queue-first: #e0a060;
 
     /* Hover shades of the colored buttons */
-    --color-success-h:   #15803d;
-    --color-warning-h:   #b45309;
-    --color-danger-h:    #b91c1c;
-    --color-btn-hover:   #e5e7eb;   /* plain (grey) button */
+    --color-success-h:   #3f8048;
+    --color-warning-h:   #a9721f;
+    --color-danger-h:    #98353f;
+    --color-btn-hover:   #e8e2d4;   /* plain (grey) button */
     --color-on-accent:   #ffffff;   /* text on colored backgrounds (buttons, badges, calendar events) */
 
     /* Alerts and highlights */
-    --color-error-bg:      #fef2f2;
-    --color-error-text:    #991b1b;
-    --color-error-border:  #fecaca;
-    --color-success-bg:    #f0fdf4;
-    --color-success-text:  #15803d;
-    --color-success-border:#bbf7d0;
-    --color-warning-bg:    #fffbeb;
-    --color-warning-text:  #92400e;
-    --color-warning-border:#fde68a;
-    --color-changed-border:#fcd34d;  /* "changed since you opened it" banner */
-    --color-row-hover:     #f9fafb;
-    --color-today-bg:      #eff6ff;  /* today's row in tables */
+    --color-error-bg:      #fbedea;
+    --color-error-text:    #8a3a2e;
+    --color-error-border:  #f0c9c0;
+    --color-success-bg:    #eef6ec;
+    --color-success-text:  #3f7a47;
+    --color-success-border:#c5e3c8;
+    --color-warning-bg:    #fbf4e4;
+    --color-warning-text:  #8a5a1a;
+    --color-warning-border:#eed9a8;
+    --color-changed-border:#e6c36a;  /* "changed since you opened it" banner */
+    --color-row-hover:     #faf8f2;
+    --color-today-bg:      #eaf0f5;  /* today's row in tables */
 
     /* Calendars */
-    --color-cal-muted-bg:  #fafafa;  /* other-month / weekend cells of the actions calendar */
-    --color-day-weekend:   #e2e8f0;  /* room calendar columns */
-    --color-day-today:     #bfdbfe;
-    --color-day-occupied:  #f0fdf4;
+    --color-cal-muted-bg:  #f8f5ee;  /* other-month / weekend cells of the actions calendar */
+    --color-day-weekend:   #e4e9ee;  /* room calendar columns */
+    --color-day-today:     #c9d6e2;
+    --color-day-occupied:  #eef6ec;
 
     /* Menu: each item is tinted with one of these four colors in turn (strength set below in .nav-links) */
-    --color-nav-1:       #cc0066;
-    --color-nav-2:       #66cccc;
-    --color-nav-3:       #ffcc33;
-    --color-nav-4:       #d0d0cf;
+    --color-nav-1:       #d4735f;   /* BadIt brick */
+    --color-nav-2:       #93aac0;   /* BadIt slate */
+    --color-nav-3:       #5db067;   /* BadIt green */
+    --color-nav-4:       #c9c2b2;   /* darker chalk */
 
-    /* Print exports (export/print-*.php, admin/logs-print.php) */
-    --color-print-accent:    #1e3a52;  /* headings + table lines of the weekly plan and logs */
-    --color-print-border:    #333333;  /* table lines of the other exports */
-    --color-print-header-bg: #f2f2f2;  /* table header row */
-    --color-print-text-2:    #4b5563;  /* secondary text */
+    /* Print exports (export/print-*.php, admin/logs-print.php) — BadIt print variant: white paper, dark lines */
+    --color-print-accent:    #3c4146;  /* headings + table lines of the weekly plan and logs */
+    --color-print-border:    #3c4146;  /* table lines of the other exports */
+    --color-print-header-bg: #f4f0e6;  /* table header row */
+    --color-print-text-2:    #6f879e;  /* secondary text */
+    --color-print-bg:        #ffffff;  /* paper */
+    --color-print-text:      #3c4146;  /* header text of the weekly plan */
+
+    /* Shadows and overlays (asphalt tint instead of pure black) */
+    --color-shadow-card:     rgba(60, 65, 70, .10);  /* login box */
+    --color-shadow-modal:    rgba(60, 65, 70, .28);  /* confirm modal */
+    --color-overlay:         rgba(60, 65, 70, .55);  /* backdrop behind the modal */
+    --color-timeline-tick:   rgba(60, 65, 70, .08);  /* 15-min lines of the day timeline */
 
     --radius:            6px;
-    --shadow:            0 1px 3px rgba(0,0,0,.1);
+    --shadow:            0 1px 3px rgba(60, 65, 70, .12);
+
+    /* This :root is the complete list of colors used by the app (main.css + print views). A theme
+       (public/themes/<name>/theme.css) may override any of them; keep a company theme complete so changes
+       to these defaults never alter its look. */
 }
 
 html { font-size: 16px; }
@@ -833,7 +847,7 @@ textarea.field-error {
     padding: 2rem;
     width: 100%;
     max-width: 400px;
-    box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    box-shadow: 0 4px 12px var(--color-shadow-card);
 }
 
 .login-title {
@@ -1206,7 +1220,7 @@ textarea.field-error {
     height: 1.6rem;
     background-image:
         repeating-linear-gradient(to right, var(--color-border) 0, var(--color-border) 1px, transparent 1px, transparent calc(100% / 24)),
-        repeating-linear-gradient(to right, rgba(0, 0, 0, .07) 0, rgba(0, 0, 0, .07) 1px, transparent 1px, transparent calc(100% / 96));
+        repeating-linear-gradient(to right, var(--color-timeline-tick) 0, var(--color-timeline-tick) 1px, transparent 1px, transparent calc(100% / 96));
     border: 1px solid var(--color-border);
     border-radius: 3px;
 }
@@ -1334,7 +1348,7 @@ h3 { font-size: .95rem; margin: .75rem 0 .4rem; }
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, .5);
+    background: var(--color-overlay);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1347,7 +1361,7 @@ h3 { font-size: .95rem; margin: .75rem 0 .4rem; }
     padding: 1.5rem;
     max-width: 420px;
     width: 90%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+    box-shadow: 0 10px 30px var(--color-shadow-modal);
 }
 
 .modal-box h3 { margin-top: 0; }

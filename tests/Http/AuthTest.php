@@ -29,6 +29,14 @@ final class AuthTest extends HttpTestCase
         $this->assertOk($this->http->get('/login'));
     }
 
+    /** Nadpis přihlašovacího formuláře je název aplikace z konfigurace (app_name). */
+    public function testLoginTitleIsAppName(): void
+    {
+        $title = $this->http->get('/login')->xpath()->query('//h1[@class="login-title"]');
+        $this->assertSame(1, $title->length);
+        $this->assertSame('Bad Event Manager (TEST)', trim($title->item(0)->textContent));
+    }
+
     /** Přihlášení heslem funguje a na přehledu je vidět jméno uživatele. */
     public function testLoginWithPassword(): void
     {
