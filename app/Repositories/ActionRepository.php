@@ -971,13 +971,19 @@ final class ActionRepository
         return $stmt->fetchAll();
     }
 
-    /** Sums attendance across every action in an event, broken down by visitor category. */
+    /**
+     * Sums attendance across the actions of an event, broken down by visitor category: 'total' leaves out
+     * not_agreed and cancelled actions (same rule as the Statistika export), 'total_all' counts every action.
+     */
     public function eventAttendanceTotals(int $eventId): array
     {
         $sql = <<<SQL
-            SELECT vc.id, vc.name, SUM(aa.visitor_count) AS total
+            SELECT vc.id, vc.name,
+                   COALESCE(SUM(aa.visitor_count) FILTER (WHERE s.code NOT IN ('not_agreed', 'cancelled')), 0) AS total,
+                   SUM(aa.visitor_count) AS total_all
             FROM action_attendance aa
             JOIN actions a             ON a.id = aa.action_id
+            JOIN action_statuses s     ON s.id = a.actual_status
             JOIN visitor_categories vc ON vc.id = aa.visitor_category_id
             WHERE a.event_id = :event_id
             GROUP BY vc.id, vc.name

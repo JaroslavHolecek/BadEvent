@@ -82,13 +82,20 @@ final class FinanceRepository
         return $stmt->fetchAll();
     }
 
-    /** Sums incomes across every action in an event, broken down by income type and currency. */
+    /**
+     * Event statistics (events/show): 'total' leaves out not_agreed and cancelled actions (same rule as
+     * the Statistika export), 'total_all' counts every action of the event. A row exists when any action has
+     * an entry of that type/currency, so 'total' may be 0.
+     */
+    private const EVENT_STATS_COUNTED = "s.code NOT IN ('not_agreed', 'cancelled')";
+
+    /** Sums incomes across the actions of an event, broken down by income type and currency (total / total_all). */
     public function eventIncomeTotalsByType(int $eventId): array
     {
         return $this->eventTotalsByType('action_incomes', 'ai', 'income_types', 'it', 'income_type_id', $eventId);
     }
 
-    /** Sums costs across every action in an event, broken down by cost type and currency. */
+    /** Sums costs across the actions of an event, broken down by cost type and currency (total / total_all). */
     public function eventCostTotalsByType(int $eventId): array
     {
         return $this->eventTotalsByType('action_costs', 'ac', 'cost_types', 'ct', 'cost_type_id', $eventId);
@@ -96,10 +103,14 @@ final class FinanceRepository
 
     private function eventTotalsByType(string $table, string $alias, string $typeTable, string $typeAlias, string $typeColumn, int $eventId): array
     {
+        $counted = self::EVENT_STATS_COUNTED;
         $sql = <<<SQL
-            SELECT {$typeAlias}.name AS type_name, c.code, c.symbol, SUM({$alias}.amount) AS total
+            SELECT {$typeAlias}.name AS type_name, c.code, c.symbol,
+                   COALESCE(SUM({$alias}.amount) FILTER (WHERE {$counted}), 0) AS total,
+                   SUM({$alias}.amount) AS total_all
             FROM {$table} {$alias}
             JOIN actions a            ON a.id = {$alias}.action_id
+            JOIN action_statuses s    ON s.id = a.actual_status
             JOIN {$typeTable} {$typeAlias} ON {$typeAlias}.id = {$alias}.{$typeColumn}
             JOIN currencies c         ON c.id = {$alias}.currency_id
             WHERE a.event_id = :event_id
@@ -111,13 +122,13 @@ final class FinanceRepository
         return $stmt->fetchAll();
     }
 
-    /** Sums incomes across every action in an event, per currency (no type breakdown). */
+    /** Sums incomes across the actions of an event, per currency, no type breakdown (total / total_all). */
     public function eventIncomeGrandTotals(int $eventId): array
     {
         return $this->eventGrandTotals('action_incomes', 'ai', $eventId);
     }
 
-    /** Sums costs across every action in an event, per currency (no type breakdown). */
+    /** Sums costs across the actions of an event, per currency, no type breakdown (total / total_all). */
     public function eventCostGrandTotals(int $eventId): array
     {
         return $this->eventGrandTotals('action_costs', 'ac', $eventId);
@@ -125,10 +136,14 @@ final class FinanceRepository
 
     private function eventGrandTotals(string $table, string $alias, int $eventId): array
     {
+        $counted = self::EVENT_STATS_COUNTED;
         $sql = <<<SQL
-            SELECT c.code, c.symbol, SUM({$alias}.amount) AS total
+            SELECT c.code, c.symbol,
+                   COALESCE(SUM({$alias}.amount) FILTER (WHERE {$counted}), 0) AS total,
+                   SUM({$alias}.amount) AS total_all
             FROM {$table} {$alias}
             JOIN actions a    ON a.id = {$alias}.action_id
+            JOIN action_statuses s ON s.id = a.actual_status
             JOIN currencies c ON c.id = {$alias}.currency_id
             WHERE a.event_id = :event_id
             GROUP BY c.code, c.symbol

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration;
 
+use App\Repositories\ActionRepository;
 use App\Repositories\FinanceRepository;
 use PDOException;
 use Tests\Support\DatabaseTestCase;
@@ -46,6 +47,44 @@ final class FinanceRepositoryTest extends DatabaseTestCase
         $this->assertSame('175.00', $finance->eventIncomeGrandTotals($event)[0]['total']);
         $byType = array_column($finance->eventIncomeTotalsByType($event), 'total', 'type_name');
         $this->assertSame(['Dar' => '25.00', 'Vstupné' => '150.00'], $byType);
+    }
+
+    /**
+     * Statistiky události: hlavní hodnota (total) je bez zrušených a nedojednaných akcí, total_all zahrnuje
+     * všechny akce události — u příjmů, výdajů i návštěvnosti.
+     */
+    public function testEventStatsLeaveOutCancelledAndNotAgreedOnlyInMainValue(): void
+    {
+        $event     = Fixtures::event('Festival');
+        $ok        = Fixtures::action(['event_id' => $event]);
+        $cancelled = Fixtures::action(['event_id' => $event]);
+        $notAgreed = Fixtures::action(['event_id' => $event]);
+        Fixtures::setStatus($cancelled, 'cancelled');
+        Fixtures::setStatus($notAgreed, 'not_agreed');
+        Fixtures::income($ok, 'Vstupné', '100.00');
+        Fixtures::income($cancelled, 'Vstupné', '40.00');
+        Fixtures::income($notAgreed, 'Dar', '5.00');
+        Fixtures::cost($cancelled, 'DPP', 'Lektor', '300.00');
+        Fixtures::attendance($ok, 'Platící', 'Dospělí', 12);
+        Fixtures::attendance($cancelled, 'Platící', 'Dospělí', 8);
+
+        $finance = new FinanceRepository();
+
+        $grand = $finance->eventIncomeGrandTotals($event)[0];
+        $this->assertSame(['100.00', '145.00'], [$grand['total'], $grand['total_all']]);
+
+        $byType = [];
+        foreach ($finance->eventIncomeTotalsByType($event) as $t) {
+            $byType[$t['type_name']] = [(float) $t['total'], (float) $t['total_all']];
+        }
+        $this->assertSame(['Dar' => [0.0, 5.0], 'Vstupné' => [100.0, 140.0]], $byType);
+
+        $cost = $finance->eventCostGrandTotals($event)[0];
+        $this->assertSame([0.0, 300.0], [(float) $cost['total'], (float) $cost['total_all']]);
+
+        $attendance = (new ActionRepository())->eventAttendanceTotals($event);
+        $this->assertCount(1, $attendance);
+        $this->assertSame([12, 20], [(int) $attendance[0]['total'], (int) $attendance[0]['total_all']]);
     }
 
     /** Uložení ekonomických údajů nahradí všechny předchozí příjmy akce. */

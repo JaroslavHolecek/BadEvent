@@ -882,6 +882,7 @@ textarea.field-error {
 .tab-panel.active { display: block; }
 
 .hint { font-size: .82rem; color: var(--color-text-muted); margin-top: .75rem; text-align: center; }
+.stats-note { font-size: .85rem; color: var(--color-text-muted); margin-bottom: .75rem; }  /* explanation above the event statistics (events/show) */
 
 /* ============================================================
    Notification list
